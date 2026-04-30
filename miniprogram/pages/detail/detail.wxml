@@ -1,0 +1,91 @@
+<!--
+  产品详情页
+  产品头部 + 保质期状态 + 详细信息 + 操作按钮
+  设计参考: design-system/pages/detail.md
+-->
+<view class="page-detail" wx:if="{{product}}">
+
+  <!-- 产品头部卡片 -->
+  <view class="detail-header card">
+    <view class="header-icon icon-{{colorClass}}">
+      <text class="header-icon-text">{{product.name[0] || '?'}}</text>
+    </view>
+    <text class="header-brand" wx:if="{{product.brand}}">{{product.brand}}</text>
+    <text class="header-name">{{product.name}}</text>
+    <view class="header-tags">
+      <text class="header-category-tag">{{product.category}}</text>
+      <text class="header-spec" wx:if="{{product.specification}}">{{product.specification}}</text>
+    </view>
+  </view>
+
+  <!-- 保质期状态卡片 -->
+  <view class="expiry-card card expiry-{{colorClass}}">
+    <text class="expiry-remaining-num">{{remainingDaysAbs}}</text>
+    <text class="expiry-remaining-unit">{{remainingUnit}}</text>
+    <text class="expiry-remaining-desc">{{remainingText}}</text>
+    <!-- 进度条 -->
+    <view class="detail-progress-bar">
+      <view class="detail-progress-fill progress-{{colorClass}}" style="width: {{progressPercent}}%;"></view>
+    </view>
+    <!-- 关键日期 -->
+    <view class="expiry-dates">
+      <view class="date-row">
+        <text class="date-label">生产日期</text>
+        <text class="date-value">{{product.productionDate}}</text>
+      </view>
+      <view class="date-row">
+        <text class="date-label">过期日期</text>
+        <text class="date-value">{{product.expirationDate}}</text>
+      </view>
+      <view class="date-row" wx:if="{{product.openedDate}}">
+        <text class="date-label">开封日期</text>
+        <text class="date-value">{{product.openedDate}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 详细信息列表 -->
+  <view class="info-card card">
+    <view class="info-row">
+      <text class="info-label">保质期</text>
+      <text class="info-value">{{product.shelfLifeMonths}} 个月</text>
+    </view>
+    <view class="info-row" wx:if="{{product.openedShelfLifeMonths}}">
+      <text class="info-label">开封后保质期</text>
+      <text class="info-value">{{product.openedShelfLifeMonths}} 个月</text>
+    </view>
+    <view class="info-row" wx:if="{{product.sourceLink}}">
+      <text class="info-label">来源链接</text>
+      <text class="info-value info-link">已关联</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮区 -->
+  <view class="action-section" wx:if="{{product.status !== 'used_up' && product.status !== 'discarded'}}">
+    <view class="action-row">
+      <button class="btn-action btn-used" bindtap="onMarkUsedUp">标记用完</button>
+      <button class="btn-action btn-discard" bindtap="onMarkDiscarded">标记丢弃</button>
+    </view>
+  </view>
+  <view class="action-section" wx:else>
+    <view class="done-badge">
+      <text class="done-text">{{product.status === 'used_up' ? '已用完' : '已丢弃'}}</text>
+    </view>
+  </view>
+
+  <!-- 删除按钮 -->
+  <view class="delete-section">
+    <button class="btn-delete" bindtap="onDelete">删除产品</button>
+  </view>
+
+</view>
+
+<!-- 加载中 -->
+<view class="loading-page" wx:if="{{!product && !loadError}}">
+  <text class="loading-text">加载中...</text>
+</view>
+
+<!-- 加载失败 -->
+<view class="error-page" wx:if="{{loadError}}">
+  <text class="error-text">{{loadError}}</text>
+</view>

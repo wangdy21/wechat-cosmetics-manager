@@ -1,0 +1,198 @@
+<!--
+  添加产品页
+  双模式：链接导入 / 手动录入
+  设计参考: design-system/pages/add.md
+-->
+<view class="page-add">
+
+  <!-- 模式切换 Tab -->
+  <view class="mode-switcher">
+    <view
+      class="mode-tab {{mode === 'link' ? 'mode-tab-active' : ''}}"
+      bindtap="switchMode"
+      data-mode="link"
+    >链接导入</view>
+    <view
+      class="mode-tab {{mode === 'manual' ? 'mode-tab-active' : ''}}"
+      bindtap="switchMode"
+      data-mode="manual"
+    >手动录入</view>
+  </view>
+
+  <!-- 链接导入区域 -->
+  <view class="link-section" wx:if="{{mode === 'link'}}">
+    <view class="link-input-row">
+      <input
+        class="input link-input"
+        placeholder="粘贴淘宝/天猫商品链接或淘口令"
+        value="{{linkText}}"
+        bindinput="onLinkInput"
+        disabled="{{parsing}}"
+      />
+      <button
+        class="btn-primary btn-parse"
+        bindtap="onParseTap"
+        disabled="{{parsing || !linkText}}"
+      >
+        <text wx:if="{{!parsing}}">解析</text>
+        <text wx:else>解析中...</text>
+      </button>
+    </view>
+
+    <!-- 解析结果提示 -->
+    <view class="parse-result parse-success" wx:if="{{parseStatus === 'success'}}">
+      <text>识别成功：{{parsedName}}</text>
+    </view>
+    <view class="parse-result parse-fail" wx:if="{{parseStatus === 'fail'}}">
+      <text>{{parseError}}</text>
+      <text class="switch-manual" bindtap="switchToManual">切换手动录入</text>
+    </view>
+  </view>
+
+  <!-- 表单区域 -->
+  <view class="form-section">
+    <!-- 品牌 -->
+    <view class="form-item">
+      <text class="form-label">品牌</text>
+      <input
+        class="input"
+        placeholder="如：兰蔻"
+        value="{{form.brand}}"
+        bindinput="onFormInput"
+        data-field="brand"
+      />
+    </view>
+
+    <!-- 名称 -->
+    <view class="form-item">
+      <text class="form-label">名称 <text class="required">*</text></text>
+      <input
+        class="input"
+        placeholder="如：小黑瓶精华肌底液"
+        value="{{form.name}}"
+        bindinput="onFormInput"
+        data-field="name"
+      />
+    </view>
+
+    <!-- 分类选择 -->
+    <view class="form-item">
+      <text class="form-label">分类 <text class="required">*</text></text>
+      <view class="category-tags" wx:if="{{categories.length > 0}}">
+        <view
+          wx:for="{{categories}}"
+          wx:key="_id"
+          class="category-tag {{form.category === item.name ? 'category-tag-active' : ''}}"
+          bindtap="onCategoryTap"
+          data-name="{{item.name}}"
+        >{{item.name}}</view>
+      </view>
+      <view class="category-empty" wx:else>
+        <text class="category-empty-text">还没有分类，</text>
+        <text class="category-empty-link" bindtap="goCategoryManage">去创建分类</text>
+      </view>
+    </view>
+
+    <!-- 规格 -->
+    <view class="form-item">
+      <text class="form-label">规格</text>
+      <input
+        class="input"
+        placeholder="如：50ml"
+        value="{{form.specification}}"
+        bindinput="onFormInput"
+        data-field="specification"
+      />
+    </view>
+
+    <!-- 生产日期 -->
+    <view class="form-item">
+      <text class="form-label">生产日期 <text class="required">*</text></text>
+      <picker
+        mode="date"
+        value="{{form.productionDate}}"
+        end="{{today}}"
+        bindchange="onDateChange"
+        data-field="productionDate"
+      >
+        <view class="input picker-value {{form.productionDate ? '' : 'placeholder'}}">
+          {{form.productionDate || '请选择生产日期'}}
+        </view>
+      </picker>
+    </view>
+
+    <!-- 保质期 -->
+    <view class="form-item">
+      <text class="form-label">保质期（月） <text class="required">*</text></text>
+      <input
+        class="input"
+        type="number"
+        placeholder="如：36"
+        value="{{form.shelfLifeMonths}}"
+        bindinput="onFormInput"
+        data-field="shelfLifeMonths"
+      />
+    </view>
+
+    <!-- 过期时间自动计算预览 -->
+    <view class="expiry-preview" wx:if="{{expiryPreview}}">
+      <view class="expiry-preview-inner">
+        <text class="expiry-label">预计过期日期</text>
+        <text class="expiry-date">{{expiryPreview}}</text>
+      </view>
+    </view>
+
+    <!-- 开封信息（折叠区域） -->
+    <view class="form-item">
+      <view class="opened-toggle" bindtap="toggleOpened">
+        <text class="form-label">已开封？</text>
+        <text class="toggle-icon">{{showOpened ? '收起' : '展开'}}</text>
+      </view>
+    </view>
+
+    <block wx:if="{{showOpened}}">
+      <!-- 开封日期 -->
+      <view class="form-item">
+        <text class="form-label">开封日期</text>
+        <picker
+          mode="date"
+          value="{{form.openedDate}}"
+          start="{{form.productionDate}}"
+          end="{{today}}"
+          bindchange="onDateChange"
+          data-field="openedDate"
+        >
+          <view class="input picker-value {{form.openedDate ? '' : 'placeholder'}}">
+            {{form.openedDate || '请选择开封日期'}}
+          </view>
+        </picker>
+      </view>
+
+      <!-- 开封后保质期 -->
+      <view class="form-item">
+        <text class="form-label">开封后保质期（月）</text>
+        <input
+          class="input"
+          type="number"
+          placeholder="如：12"
+          value="{{form.openedShelfLifeMonths}}"
+          bindinput="onFormInput"
+          data-field="openedShelfLifeMonths"
+        />
+      </view>
+    </block>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="save-section">
+    <button
+      class="btn-primary btn-save"
+      bindtap="onSaveTap"
+      disabled="{{saving}}"
+    >
+      <text wx:if="{{!saving}}">保存产品</text>
+      <text wx:else>保存中...</text>
+    </button>
+  </view>
+
+</view>

@@ -1,0 +1,28 @@
+<!--
+  产品卡片组件
+  展示：图标、产品名、分类+规格、状态标签、进度条
+-->
+<view class="product-card card" bindtap="onCardTap">
+  <view class="card-top">
+    <!-- 图标容器 -->
+    <view class="card-icon icon-{{colorClass}}">
+      <text class="icon-text">{{product.name[0] || '?'}}</text>
+    </view>
+    <!-- 产品信息 -->
+    <view class="card-info">
+      <text class="card-name">{{product.name}}</text>
+      <text class="card-meta">{{product.category}}{{product.specification ? ' · ' + product.specification : ''}}</text>
+    </view>
+    <!-- 状态标签 -->
+    <view class="status-tag tag-{{colorClass}}">
+      <text>{{statusLabel}}</text>
+    </view>
+  </view>
+  <!-- 进度条 + 剩余天数 -->
+  <view class="card-bottom">
+    <view class="progress-bar">
+      <view class="progress-bar-fill progress-{{colorClass}}" style="width: {{progressPercent}}%;"></view>
+    </view>
+    <text class="remaining-text text-{{colorClass}}">{{remainingText}}</text>
+  </view>
+</view>

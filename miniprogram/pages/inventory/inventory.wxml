@@ -1,0 +1,88 @@
+<!--
+  库存清单页
+  搜索 + 分类筛选 + 状态过滤 + 产品卡片列表
+  设计参考: design-system/pages/inventory.md
+-->
+<view class="page-inventory">
+
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-icon">
+      <text class="search-icon-text">Q</text>
+    </view>
+    <input
+      class="search-input"
+      placeholder="搜索产品名称或品牌..."
+      value="{{keyword}}"
+      bindinput="onSearchInput"
+      confirm-type="search"
+      bindconfirm="onSearch"
+    />
+  </view>
+
+  <!-- 分类标签行 -->
+  <scroll-view class="category-scroll" scroll-x enable-flex>
+    <view
+      class="filter-tag {{activeCategory === '' ? 'filter-tag-active' : ''}}"
+      bindtap="onCategoryFilter"
+      data-category=""
+    >全部</view>
+    <view
+      wx:for="{{categories}}"
+      wx:key="_id"
+      class="filter-tag {{activeCategory === item.name ? 'filter-tag-active' : ''}}"
+      bindtap="onCategoryFilter"
+      data-category="{{item.name}}"
+    >{{item.name}}</view>
+  </scroll-view>
+
+  <!-- 状态过滤标签 -->
+  <view class="status-filters">
+    <view
+      class="status-tag status-safe {{activeStatus === 'in_use' ? 'status-tag-active' : ''}}"
+      bindtap="onStatusFilter"
+      data-status="in_use"
+    >在用</view>
+    <view
+      class="status-tag status-warning {{activeStatus === 'expiring_soon' ? 'status-tag-active' : ''}}"
+      bindtap="onStatusFilter"
+      data-status="expiring_soon"
+    >即将过期</view>
+    <view
+      class="status-tag status-danger {{activeStatus === 'expired' ? 'status-tag-active' : ''}}"
+      bindtap="onStatusFilter"
+      data-status="expired"
+    >已过期</view>
+  </view>
+
+  <!-- 产品卡片列表 -->
+  <view class="product-list" wx:if="{{products.length > 0}}">
+    <product-card
+      wx:for="{{products}}"
+      wx:key="_id"
+      product="{{item}}"
+      advanceDays="{{advanceDays}}"
+    />
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && products.length === 0}}">
+    <view class="empty-icon">
+      <text class="empty-icon-text">~</text>
+    </view>
+    <text class="empty-title">还没有产品</text>
+    <text class="empty-desc">去添加第一件化妆品吧</text>
+    <button class="btn-primary btn-empty" bindtap="goAdd">添加产品</button>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{hasMore && products.length > 0}}">
+    <text class="load-more-text" bindtap="loadMore">加载更多</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+</view>

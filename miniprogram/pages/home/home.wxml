@@ -1,0 +1,104 @@
+<!--
+  首页 — 概览仪表盘
+  渐变背景 + 统计卡片 + 即将过期警告 + 最近添加
+  设计参考: design-system/pages/home.md
+-->
+<view class="page-home">
+
+  <!-- 顶部渐变区域 -->
+  <view class="home-header">
+    <!-- 几何装饰 -->
+    <view class="geo-circle geo-1"></view>
+    <view class="geo-rect geo-2"></view>
+    <view class="geo-triangle geo-3"></view>
+
+    <text class="home-title">我的美妆库</text>
+
+    <!-- 统计卡片行 -->
+    <view class="stat-row">
+      <view class="stat-card stat-safe">
+        <text class="stat-num">{{stats.inUse}}</text>
+        <text class="stat-label">在用</text>
+      </view>
+      <view class="stat-card stat-warning">
+        <text class="stat-num">{{stats.attention}}</text>
+        <text class="stat-label">注意</text>
+      </view>
+      <view class="stat-card stat-rate">
+        <text class="stat-num">{{stats.safeRate}}<text class="stat-unit">%</text></text>
+        <text class="stat-label">安全率</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 即将过期警告区 -->
+  <view class="section" wx:if="{{warningProducts.length > 0}}">
+    <text class="section-title">即将过期</text>
+    <view
+      wx:for="{{warningProducts}}"
+      wx:key="_id"
+      class="warning-card card {{item._displayStatus === 'expired' ? 'border-danger' : 'border-warning'}}"
+      bindtap="goDetail"
+      data-id="{{item._id}}"
+    >
+      <view class="warning-card-top">
+        <view class="warning-info">
+          <text class="warning-name">{{item.name}}</text>
+          <text class="warning-meta">{{item.category}}</text>
+        </view>
+        <view class="warning-days">
+          <text class="warning-days-num">{{item._remainingAbs}}</text>
+          <text class="warning-days-unit">{{item._remainingLabel}}</text>
+        </view>
+      </view>
+      <view class="progress-bar">
+        <view class="progress-bar-fill progress-{{item._displayStatus === 'expired' ? 'danger' : 'warning'}}" style="width: {{item._progress}}%;"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 安全提示 -->
+  <view class="safe-banner card" wx:if="{{!loading && warningProducts.length === 0 && stats.inUse > 0}}">
+    <text class="safe-text">所有产品状态安全，继续保持！</text>
+  </view>
+
+  <!-- 最近添加 -->
+  <view class="section" wx:if="{{recentProducts.length > 0}}">
+    <text class="section-title">最近添加</text>
+    <view
+      wx:for="{{recentProducts}}"
+      wx:key="_id"
+      class="recent-card card"
+      bindtap="goDetail"
+      data-id="{{item._id}}"
+    >
+      <view class="recent-icon">
+        <text class="recent-icon-text">{{item.name[0] || '?'}}</text>
+      </view>
+      <view class="recent-info">
+        <text class="recent-name">{{item.name}}</text>
+        <text class="recent-meta">{{item.category}}{{item.specification ? ' · ' + item.specification : ''}}</text>
+      </view>
+      <text class="recent-time">{{item._addedDate}}</text>
+    </view>
+    <view class="view-all" bindtap="goInventory">
+      <text class="view-all-text">查看全部</text>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-home" wx:if="{{!loading && stats.inUse === 0 && stats.attention === 0}}">
+    <view class="empty-icon">
+      <text class="empty-icon-text">+</text>
+    </view>
+    <text class="empty-title">还没有产品</text>
+    <text class="empty-desc">添加第一件化妆品，开始管理保质期吧</text>
+    <button class="btn-primary btn-empty" bindtap="goAdd">添加产品</button>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+</view>

@@ -1,0 +1,32 @@
+<!--
+  分类管理页
+  全部由用户自定义的分类增删
+  设计参考: design-system/pages/category.md
+-->
+<view class="page-category">
+
+  <!-- 自定义分类 -->
+  <view class="section">
+    <text class="section-label">我的分类</text>
+    <view class="category-list card" wx:if="{{customCategories.length > 0}}">
+      <view
+        wx:for="{{customCategories}}"
+        wx:key="_id"
+        class="category-item custom-item"
+      >
+        <text class="category-name">{{item.name}}</text>
+        <text class="delete-btn" bindtap="onDeleteCategory" data-id="{{item._id}}" data-name="{{item.name}}">删除</text>
+      </view>
+    </view>
+    <view class="empty-custom" wx:elif="{{!loading}}">
+      <text class="empty-text">还没有分类，点击下方按钮添加</text>
+    </view>
+  </view>
+
+  <!-- 添加分类按钮 -->
+  <view class="add-category-btn" bindtap="onAddCategory">
+    <text class="add-icon">+</text>
+    <text class="add-text">添加分类</text>
+  </view>
+
+</view>

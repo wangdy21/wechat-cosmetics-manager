@@ -1,0 +1,34 @@
+# 依赖
+node_modules/
+cloudfunctions/*/node_modules/
+
+# 日志
+*.log
+npm-debug.log*
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 编辑器/IDE
+.vscode/
+.idea/
+*.swp
+
+# 微信开发者工具私密配置
+project.private.config.json
+
+# Brainstorm 临时服务文件
+.superpowers/
+
+# Qoder IDE 本地配置（含 symlink，不适合跨平台共享）
+.qoder/skills/
+.github/skills/ui-ux-pro-max/data
+.github/skills/ui-ux-pro-max/scripts
+
+# 测试覆盖率
+coverage/
+
+# 环境变量
+.env
+.env.local

@@ -1,0 +1,144 @@
+/**
+ * 个人中心页样式
+ * 设计参考: design-system/MASTER.md + design-system/pages/profile.md
+ */
+
+.page-profile {
+  padding-bottom: 80px;
+  min-height: 100vh;
+}
+
+/* 用户信息区 */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  background-color: var(--color-primary-bg);
+  padding: var(--space-xl) var(--space-lg);
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-text {
+  font-size: 20px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-title {
+  display: block;
+  font-size: var(--font-h2-size);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.profile-count {
+  display: block;
+  font-size: var(--font-caption-size);
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* 区块 */
+.section {
+  padding: var(--space-xl) var(--space-lg) 0;
+}
+
+.section-label {
+  display: block;
+  font-size: var(--font-caption-size);
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+}
+
+/* 库存统计 */
+.category-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.cat-stat-card {
+  flex: 1;
+  min-width: 80px;
+  border-radius: var(--radius-card);
+  padding: var(--space-md);
+  text-align: center;
+}
+
+.cat-bg-0 { background: linear-gradient(135deg, #FFF0F3, #FFB3C1); }
+.cat-bg-1 { background: linear-gradient(135deg, #EDE9FE, #C4B5FD); }
+.cat-bg-2 { background: linear-gradient(135deg, #DCFCE7, #A7F3D0); }
+
+.cat-stat-num {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.cat-stat-name {
+  display: block;
+  font-size: var(--font-small-size);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* 设置列表 */
+.settings-group {
+  padding: 0;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-name {
+  font-size: var(--font-body-size);
+  color: var(--color-text-primary);
+}
+
+.setting-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.setting-value {
+  font-size: var(--font-body-size);
+  color: var(--color-text-secondary);
+}
+
+.setting-arrow {
+  font-size: var(--font-caption-size);
+  color: var(--color-text-tertiary);
+}
+
+.setting-switch {
+  transform: scale(0.8);
+}

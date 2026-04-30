@@ -1,0 +1,200 @@
+/**
+ * CosmeticBox 全局样式
+ * 设计系统 Token → CSS 变量
+ * 参考: design-system/MASTER.md
+ */
+
+page {
+  /* 主色 · Primary（珊瑚粉） */
+  --color-primary: #FF6B8A;
+  --color-primary-light: #FF8FA3;
+  --color-primary-lighter: #FFB3C1;
+  --color-primary-bg: #FFF0F3;
+
+  /* 辅色 · Secondary（薰衣草紫） */
+  --color-secondary: #8B5CF6;
+  --color-secondary-light: #A78BFA;
+  --color-secondary-lighter: #C4B5FD;
+  --color-secondary-bg: #EDE9FE;
+
+  /* 语义色 · Semantic */
+  --color-safe: #34D399;
+  --color-safe-bg: #DCFCE7;
+  --color-warning: #FBBF24;
+  --color-warning-bg: #FEF3C7;
+  --color-danger: #F87171;
+  --color-danger-bg: #FEE2E2;
+  --color-info: #60A5FA;
+  --color-info-bg: #DBEAFE;
+
+  /* 底色 · Surfaces */
+  --color-bg: #FFFBF5;
+  --color-surface: #FFFFFF;
+  --color-text-primary: #1F1D2B;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
+  --color-border: rgba(0, 0, 0, 0.06);
+
+  /* 圆角 */
+  --radius-card: 20px;
+  --radius-button: 12px;
+  --radius-icon: 14px;
+  --radius-input: 12px;
+  --radius-tag: 8px;
+  --radius-progress: 3px;
+  --radius-full: 9999px;
+
+  /* 阴影 */
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-float: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* 间距 */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+
+  /* 字体 */
+  --font-h1-size: 28px;
+  --font-h2-size: 20px;
+  --font-h3-size: 16px;
+  --font-body-size: 14px;
+  --font-caption-size: 12px;
+  --font-small-size: 10px;
+  --font-stat-size: 24px;
+
+  /* 全局基础样式 */
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+               "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: var(--font-body-size);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  line-height: 1.5;
+}
+
+/* 通用工具类 */
+
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+.text-safe { color: var(--color-safe); }
+.text-warning { color: var(--color-warning); }
+.text-danger { color: var(--color-danger); }
+
+.bg-primary { background-color: var(--color-primary-bg); }
+.bg-secondary { background-color: var(--color-secondary-bg); }
+.bg-safe { background-color: var(--color-safe-bg); }
+.bg-warning { background-color: var(--color-warning-bg); }
+.bg-danger { background-color: var(--color-danger-bg); }
+.bg-surface { background-color: var(--color-surface); }
+
+.font-h1 {
+  font-size: var(--font-h1-size);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.font-h2 {
+  font-size: var(--font-h2-size);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.font-h3 {
+  font-size: var(--font-h3-size);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.font-body {
+  font-size: var(--font-body-size);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.font-caption {
+  font-size: var(--font-caption-size);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.font-stat {
+  font-size: var(--font-stat-size);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* 卡片基础样式 */
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-lg);
+}
+
+/* 按钮基础样式 */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-button);
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-body-size);
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+/* 输入框基础样式 */
+.input {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-body-size);
+  color: var(--color-text-primary);
+  height: 44px;
+  box-sizing: border-box;
+}
+
+/* 标签基础样式 */
+.tag {
+  display: inline-block;
+  padding: var(--space-xs) 10px;
+  border-radius: var(--radius-tag);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* 进度条基础样式 */
+.progress-bar {
+  height: 6px;
+  background-color: #E5E7EB;
+  border-radius: var(--radius-progress);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-progress);
+  transition: width 400ms ease-out;
+}
+
+.progress-safe {
+  background: linear-gradient(90deg, #34D399, #6EE7B7);
+}
+
+.progress-warning {
+  background: linear-gradient(90deg, #FBBF24, #FDE68A);
+}
+
+.progress-danger {
+  background: linear-gradient(90deg, #F87171, #FCA5A5);
+}

@@ -1,0 +1,21 @@
+{
+  "cloud": true,
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": true,
+    "autoAudits": false,
+    "uglifyFileName": false
+  },
+  "appid": "wx8d8a830da458b34f",
+  "projectname": "CosmeticBox",
+  "condition": {},
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
+  "compileType": "miniprogram",
+  "simulatorPluginLibVersion": {}
+}
