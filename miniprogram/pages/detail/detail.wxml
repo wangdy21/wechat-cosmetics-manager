@@ -15,6 +15,7 @@
     <view class="header-tags">
       <text class="header-category-tag">{{product.category}}</text>
       <text class="header-spec" wx:if="{{product.specification}}">{{product.specification}}</text>
+      <text class="header-source-tag source-{{product.source || 'manual'}}">{{product.source === 'link' ? '链接导入' : '手动录入'}}</text>
     </view>
   </view>
 

@@ -21,6 +21,16 @@ describe('identifyLinkType', () => {
       .toBe('short_link');
   });
 
+  test('identifies taobao short link (e.tb.cn)', () => {
+    expect(identifyLinkType('https://e.tb.cn/h.RWhTUz42rR221f1?tk=Ejbk5FHc4h5'))
+      .toBe('short_link');
+  });
+
+  test('identifies taobao short link embedded in share text', () => {
+    expect(identifyLinkType('【淘宝】大促价保 https://e.tb.cn/h.RWhTUz42rR221f1?tk=Ejbk5FHc4h5 CZ028 「410」点击链接直接打开'))
+      .toBe('short_link');
+  });
+
   test('identifies taokou-ling text (with ¥ delimiters)', () => {
     expect(identifyLinkType('¥abcDEF123¥'))
       .toBe('taokou_ling');
@@ -83,9 +93,14 @@ describe('extractUrl', () => {
       .toBe('https://detail.tmall.com/item.htm?id=789&skuId=abc');
   });
 
-  test('extracts short link URL', () => {
+  test('extracts short link URL (m.tb.cn)', () => {
     expect(extractUrl('推荐 https://m.tb.cn/h.abc123 给你', 'short_link'))
       .toBe('https://m.tb.cn/h.abc123');
+  });
+
+  test('extracts short link URL (e.tb.cn)', () => {
+    expect(extractUrl('【淘宝】大促价保 https://e.tb.cn/h.RWhTUz42rR221f1?tk=Ejbk5FHc4h5 CZ028 「410」', 'short_link'))
+      .toBe('https://e.tb.cn/h.RWhTUz42rR221f1?tk=Ejbk5FHc4h5');
   });
 
   test('extracts taokou-ling code with ¥', () => {
@@ -126,12 +141,18 @@ describe('parseInput', () => {
     });
   });
 
-  test('parses short link', () => {
+  test('parses short link (m.tb.cn)', () => {
     const result = parseInput('https://m.tb.cn/h.xyz789');
     expect(result).toEqual({
       type: 'short_link',
       value: 'https://m.tb.cn/h.xyz789',
     });
+  });
+
+  test('parses short link (e.tb.cn) from share text', () => {
+    const result = parseInput('【淘宝】大促价保 https://e.tb.cn/h.RWhTUz42rR221f1?tk=Ejbk5FHc4h5 CZ028 「410」点击链接直接打开 或者 淘宝搜索直接打开');
+    expect(result.type).toBe('short_link');
+    expect(result.value).toBe('https://e.tb.cn/h.RWhTUz42rR221f1?tk=Ejbk5FHc4h5');
   });
 
   test('parses taokou-ling from text', () => {

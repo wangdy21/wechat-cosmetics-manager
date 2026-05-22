@@ -63,11 +63,12 @@ Page({
   // --- 模式切换 ---
   switchMode(e) {
     const mode = e.currentTarget.dataset.mode;
-    this.setData({ mode });
+    // 切换模式时重置解析状态（解析结果仅对当前模式有意义）
+    this.setData({ mode, parseStatus: '', parseError: '' });
   },
 
   switchToManual() {
-    this.setData({ mode: 'manual' });
+    this.setData({ mode: 'manual', parseStatus: '', parseError: '' });
   },
 
   // --- 链接输入 ---
@@ -98,7 +99,19 @@ Page({
       },
     }).then((res) => {
       const parsed = res.result;
+
+      // 云函数返回错误对象（含 error 字段）
+      if (parsed && parsed.error) {
+        this.setData({
+          parsing: false,
+          parseStatus: 'fail',
+          parseError: parsed.error,
+        });
+        return;
+      }
+
       if (parsed && parsed.name) {
+        // 解析成功：仅填充表单，不切换模式（用户自主控制模式）
         this.setData({
           parsing: false,
           parseStatus: 'success',
@@ -197,6 +210,9 @@ Page({
 
     this.setData({ saving: true });
 
+    // 根据当前解析状态确定商品来源
+    const source = this.data.parseStatus === 'success' ? 'link' : 'manual';
+
     const payload = {
       action: 'add',
       name: form.name.trim(),
@@ -206,6 +222,7 @@ Page({
       productionDate: form.productionDate,
       shelfLifeMonths: Number(form.shelfLifeMonths),
       sourceLink: form.sourceLink || '',
+      source,
     };
 
     // 附带开封信息

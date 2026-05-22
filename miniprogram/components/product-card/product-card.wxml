@@ -12,6 +12,7 @@
     <view class="card-info">
       <text class="card-name">{{product.name}}</text>
       <text class="card-meta">{{product.category}}{{product.specification ? ' · ' + product.specification : ''}}</text>
+      <text class="card-source-icon" wx:if="{{product.source === 'link'}}" title="链接导入">&#x1F517;</text>
     </view>
     <!-- 状态标签 -->
     <view class="status-tag tag-{{colorClass}}">

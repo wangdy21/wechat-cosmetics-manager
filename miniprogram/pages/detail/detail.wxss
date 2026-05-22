@@ -75,6 +75,26 @@
   color: var(--color-text-secondary);
 }
 
+.header-source-tag {
+  padding: var(--space-xs) 8px;
+  border-radius: var(--radius-tag);
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.header-source-tag.source-link {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-color: #a5d6a7;
+}
+
+.header-source-tag.source-manual {
+  background-color: #fff3e0;
+  color: #e65100;
+  border-color: #ffcc80;
+}
+
 /* 保质期状态卡片 */
 .expiry-card {
   display: flex;

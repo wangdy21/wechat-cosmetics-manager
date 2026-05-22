@@ -146,6 +146,20 @@ describe('buildProductRecord', () => {
     expect(record.createdAt).toBe(now.toISOString());
     expect(record.updatedAt).toBe(now.toISOString());
   });
+
+  test('preserves source: link when provided', () => {
+    const linkInput = { ...input, source: 'link' };
+    const record = buildProductRecord(linkInput, 30, new Date('2026-03-31'));
+    expect(record.source).toBe('link');
+  });
+
+  test('defaults source to manual when not provided or invalid', () => {
+    const record1 = buildProductRecord(input, 30, new Date('2026-03-31'));
+    expect(record1.source).toBe('manual');
+
+    const record2 = buildProductRecord({ ...input, source: 'unknown' }, 30, new Date('2026-03-31'));
+    expect(record2.source).toBe('manual');
+  });
 });
 
 describe('recalcOnUpdate', () => {

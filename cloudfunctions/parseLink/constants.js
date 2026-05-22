@@ -72,12 +72,12 @@ function matchBrand(title) {
 
 /**
  * 从商品标题中提取规格信息
- * 匹配模式：数字 + 可选空格 + 单位 (ml/g/片/支/对)
+ * 匹配模式：数字（支持小数）+ 可选空格 + 单位 (ml/g/片/支/对)
  */
 function extractSpecification(title) {
   if (!title) return null;
 
-  const match = title.match(/(\d+)\s*(ml|ML|Ml|g|G|片|支|对)/);
+  const match = title.match(/(\d+\.?\d*)\s*(ml|ML|Ml|g|G|片|支|对)/);
   if (!match) return null;
 
   return match[1] + match[2].toLowerCase().replace('ml', 'ml').replace('g', 'g');

@@ -6,7 +6,8 @@
 
 // 链接类型匹配正则
 const TAOBAO_LINK_RE = /https?:\/\/(?:item\.taobao|detail\.tmall)\.com\/item\.htm[^\s]*/;
-const SHORT_LINK_RE = /https?:\/\/m\.tb\.cn\/[^\s]+/;
+// 淘宝短链：m.tb.cn (旧版) / e.tb.cn (新版) 等任意子域名
+const SHORT_LINK_RE = /https?:\/\/[a-z]+\.tb\.cn\/[^\s]+/;
 const TAOKOU_LING_RE = /[¥￥]([a-zA-Z0-9]+)[¥￥]/;
 
 /**

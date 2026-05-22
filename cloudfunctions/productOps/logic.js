@@ -52,6 +52,9 @@ function buildProductRecord(data, advanceDays, now) {
 
   const status = resolveStatus(expirationDate, advanceDays, now);
 
+  // 商品来源：link（链接导入）或 manual（手动录入）
+  const source = data.source === 'link' ? 'link' : 'manual';
+
   return {
     name: data.name.trim(),
     brand: (data.brand || '').trim(),
@@ -59,6 +62,7 @@ function buildProductRecord(data, advanceDays, now) {
     specification: (data.specification || '').trim(),
     imageUrl: data.imageUrl || '',
     sourceLink: data.sourceLink || '',
+    source,
     productionDate: data.productionDate,
     shelfLifeMonths: data.shelfLifeMonths,
     expirationDate,

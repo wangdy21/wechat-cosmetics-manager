@@ -131,6 +131,8 @@ async function handleUpdate(event, openid) {
   const { _id, ...updates } = event;
   if (!_id) return { success: false, error: '缺少产品ID' };
   delete updates.action;
+  // 保护 source 字段：商品来源在创建时确定，编辑时不可修改
+  delete updates.source;
 
   const { data: existing } = await productsCollection.doc(_id).get();
   if (getRecordOwner(existing) !== openid) {
