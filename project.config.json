@@ -10,12 +10,34 @@
     "preloadBackgroundData": false,
     "minified": true,
     "autoAudits": false,
-    "uglifyFileName": false
+    "uglifyFileName": false,
+    "compileWorklet": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
   },
   "appid": "wx8d8a830da458b34f",
   "projectname": "CosmeticBox",
   "condition": {},
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
   "compileType": "miniprogram",
-  "simulatorPluginLibVersion": {}
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
 }

@@ -28,16 +28,15 @@ Page({
 
   // --- 加载用户自定义分类 ---
   loadCategories() {
-    const db = wx.cloud.database();
-    db.collection('categories')
-      .orderBy('sortOrder', 'asc')
-      .get()
-      .then((res) => {
-        this.setData({ categories: res.data || [] });
-      })
-      .catch(() => {
-        this.setData({ categories: [] });
-      });
+    wx.cloud.callFunction({
+      name: 'productOps',
+      data: { action: 'categoryList' },
+    }).then((res) => {
+      const result = (res && res.result) || {};
+      this.setData({ categories: result.data || [] });
+    }).catch(() => {
+      this.setData({ categories: [] });
+    });
   },
 
   // --- 搜索 ---

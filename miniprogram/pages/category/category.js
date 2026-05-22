@@ -1,7 +1,7 @@
 /**
  * 分类管理页逻辑
  * 完全用户自定义：查看、添加、删除分类
- * 数据存储于云数据库 categories 集合（客户端直连，依赖默认“仅创建者可读写”安全规则）
+ * 数据存储于云数据库 categories 集合，通过 productOps 云函数操作（绕过客户端安全规则限制）
  */
 
 /**
@@ -40,20 +40,19 @@ Page({
   // --- 加载自定义分类 ---
   loadCustomCategories() {
     this.setData({ loading: true });
-    const db = wx.cloud.database();
-    db.collection('categories')
-      .orderBy('sortOrder', 'asc')
-      .get()
-      .then((res) => {
-        this.setData({
-          customCategories: res.data || [],
-          loading: false,
-        });
-      })
-      .catch((err) => {
-        this.setData({ loading: false });
-        wx.showToast({ title: parseDbError(err), icon: 'none', duration: 3000 });
+    wx.cloud.callFunction({
+      name: 'productOps',
+      data: { action: 'categoryList' },
+    }).then((res) => {
+      const result = (res && res.result) || {};
+      this.setData({
+        customCategories: result.data || [],
+        loading: false,
       });
+    }).catch((err) => {
+      this.setData({ loading: false });
+      wx.showToast({ title: parseDbError(err), icon: 'none', duration: 3000 });
+    });
   },
 
   // --- 添加自定义分类 ---
@@ -80,18 +79,22 @@ Page({
         }
 
         wx.showLoading({ title: '添加中...', mask: true });
-        const db = wx.cloud.database();
-        db.collection('categories').add({
-          data: {
-            name,
-            icon: 'custom',
-            sortOrder: this.data.customCategories.length + 1,
-            createdAt: new Date(),
-          },
-        }).then(() => {
+        wx.cloud.callFunction({
+          name: 'productOps',
+          data: { action: 'categoryAdd', name },
+        }).then((cfRes) => {
           wx.hideLoading();
-          wx.showToast({ title: '添加成功', icon: 'success' });
-          this.loadCustomCategories();
+          const result = (cfRes && cfRes.result) || {};
+          if (result.success) {
+            wx.showToast({ title: '添加成功', icon: 'success' });
+            this.loadCustomCategories();
+          } else {
+            wx.showModal({
+              title: '添加失败',
+              content: result.error || '操作失败',
+              showCancel: false,
+            });
+          }
         }).catch((err) => {
           wx.hideLoading();
           wx.showModal({
@@ -109,16 +112,23 @@ Page({
     const { id, name } = e.currentTarget.dataset;
     wx.showModal({
       title: '确认删除',
-      content: `确定要删除分类“${name}”吗？`,
+      content: `确定要删除分类"${name}"吗？`,
       confirmColor: '#F87171',
       success: (res) => {
         if (!res.confirm) return;
         wx.showLoading({ title: '删除中...', mask: true });
-        const db = wx.cloud.database();
-        db.collection('categories').doc(id).remove().then(() => {
+        wx.cloud.callFunction({
+          name: 'productOps',
+          data: { action: 'categoryDelete', _id: id },
+        }).then((cfRes) => {
           wx.hideLoading();
-          wx.showToast({ title: '已删除', icon: 'success' });
-          this.loadCustomCategories();
+          const result = (cfRes && cfRes.result) || {};
+          if (result.success) {
+            wx.showToast({ title: '已删除', icon: 'success' });
+            this.loadCustomCategories();
+          } else {
+            wx.showToast({ title: result.error || '删除失败', icon: 'none', duration: 3000 });
+          }
         }).catch((err) => {
           wx.hideLoading();
           wx.showToast({ title: parseDbError(err), icon: 'none', duration: 3000 });

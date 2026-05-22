@@ -9,6 +9,7 @@ const db = cloud.database();
 const _ = db.command;
 const productsCollection = db.collection('products');
 const settingsCollection = db.collection('reminder_settings');
+const categoriesCollection = db.collection('categories');
 
 const {
   validateAddInput,
@@ -55,6 +56,12 @@ exports.main = async (event, context) => {
         return await handleUpdateStatus(event, OPENID);
       case 'delete':
         return await handleDelete(event, OPENID);
+      case 'categoryList':
+        return await handleCategoryList(event, OPENID);
+      case 'categoryAdd':
+        return await handleCategoryAdd(event, OPENID);
+      case 'categoryDelete':
+        return await handleCategoryDelete(event, OPENID);
       default:
         return { success: false, error: '未知操作: ' + action };
     }
@@ -166,5 +173,77 @@ async function handleDelete(event, openid) {
   }
 
   await productsCollection.doc(_id).remove();
+  return { success: true };
+}
+
+// --- 分类操作 ---
+
+async function handleCategoryList(event, openid) {
+  const { data } = await categoriesCollection
+    .where(_.or([
+      { ownerOpenid: openid },
+      { _openid: openid },
+      { _openid: 'system' },
+    ]))
+    .orderBy('sortOrder', 'asc')
+    .limit(100)
+    .get();
+  return { success: true, data };
+}
+
+async function handleCategoryAdd(event, openid) {
+  const { name } = event;
+  if (!name || !name.trim()) return { success: false, error: '分类名称不能为空' };
+
+  const trimmedName = name.trim();
+  if (trimmedName.length > 20) return { success: false, error: '分类名称不能超过 20 个字符' };
+
+  // 检查重名（当前用户已有 + 系统预设）
+  const { data: existing } = await categoriesCollection
+    .where(_.or([
+      { ownerOpenid: openid, name: trimmedName },
+      { _openid: openid, name: trimmedName },
+      { _openid: 'system', name: trimmedName },
+    ]))
+    .limit(1)
+    .get();
+  if (existing.length > 0) return { success: false, error: '分类已存在' };
+
+  // 获取当前用户分类数量用于排序
+  const countResult = await categoriesCollection
+    .where(_.or([
+      { ownerOpenid: openid },
+      { _openid: openid },
+    ]))
+    .count();
+
+  const record = {
+    name: trimmedName,
+    icon: 'custom',
+    sortOrder: countResult.total + 1,
+    ownerOpenid: openid,
+    createdAt: new Date(),
+  };
+
+  const result = await categoriesCollection.add({ data: record });
+  return { success: true, data: { _id: result._id, ...record } };
+}
+
+async function handleCategoryDelete(event, openid) {
+  const { _id } = event;
+  if (!_id) return { success: false, error: '缺少分类ID' };
+
+  try {
+    const { data: existing } = await categoriesCollection.doc(_id).get();
+    const owner = existing.ownerOpenid || existing._openid;
+    // 允许用户删除自己的分类或系统预设分类
+    if (owner && owner !== openid && owner !== 'system') {
+      return { success: false, error: '无权删除此分类' };
+    }
+  } catch (e) {
+    return { success: false, error: '分类不存在' };
+  }
+
+  await categoriesCollection.doc(_id).remove();
   return { success: true };
 }
