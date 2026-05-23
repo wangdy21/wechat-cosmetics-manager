@@ -52,8 +52,9 @@ function buildProductRecord(data, advanceDays, now) {
 
   const status = resolveStatus(expirationDate, advanceDays, now);
 
-  // 商品来源：link（链接导入）或 manual（手动录入）
-  const source = data.source === 'link' ? 'link' : 'manual';
+  // 商品来源：link（链接导入）、image（图片识别）或 manual（手动录入）
+  const validSources = ['link', 'image', 'manual'];
+  const source = validSources.indexOf(data.source) !== -1 ? data.source : 'manual';
 
   return {
     name: data.name.trim(),

@@ -18,6 +18,9 @@ const {
   buildProductRecord,
   recalcOnUpdate,
 } = require('./logic');
+const { callOCR } = require('./ocr');
+const { extractProductInfo } = require('./textParser');
+const { calcRemainingDays } = require('./date');
 
 function getRecordOwner(record) {
   return (record && (record.ownerOpenid || record._openid)) || '';
@@ -62,6 +65,8 @@ exports.main = async (event, context) => {
         return await handleCategoryAdd(event, OPENID);
       case 'categoryDelete':
         return await handleCategoryDelete(event, OPENID);
+      case 'recognizeProduct':
+        return await handleRecognizeProduct(event, OPENID);
       default:
         return { success: false, error: '未知操作: ' + action };
     }
@@ -248,4 +253,56 @@ async function handleCategoryDelete(event, openid) {
 
   await categoriesCollection.doc(_id).remove();
   return { success: true };
+}
+
+// --- 图片识别操作 ---
+
+async function handleRecognizeProduct(event, openid) {
+  const { fileID } = event;
+  if (!fileID) return { success: false, error: '缺少图片文件' };
+
+  // 从云存储下载图片
+  let imageBuffer;
+  try {
+    const res = await cloud.downloadFile({ fileID });
+    imageBuffer = res.fileContent;
+  } catch (e) {
+    return { success: false, error: '图片下载失败' };
+  }
+
+  // 调用 OCR 识别
+  let lines;
+  try {
+    lines = await callOCR(imageBuffer);
+  } catch (e) {
+    return { success: false, error: e.message || '文字识别失败，请手动录入' };
+  }
+
+  if (!lines || lines.length === 0) {
+    return { success: false, error: '未能从图片中识别到文字，请拍摄更清晰的商品包装' };
+  }
+
+  // 解析文本提取商品信息
+  const info = extractProductInfo(lines);
+
+  // 计算剩余保质期天数
+  let remainingDays = null;
+  if (info.expiryDate) {
+    remainingDays = calcRemainingDays(info.expiryDate, new Date());
+  }
+
+  return {
+    success: true,
+    data: {
+      brand: info.brand,
+      name: info.name,
+      specification: info.specification,
+      category: info.category,
+      shelfLifeMonths: info.shelfLifeMonths,
+      productionDate: info.productionDate,
+      expiryDate: info.expiryDate,
+      remainingDays: remainingDays,
+      rawText: lines.join('\n'),
+    },
+  };
 }

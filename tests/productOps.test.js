@@ -153,6 +153,12 @@ describe('buildProductRecord', () => {
     expect(record.source).toBe('link');
   });
 
+  test('preserves source: image when provided', () => {
+    const imageInput = { ...input, source: 'image' };
+    const record = buildProductRecord(imageInput, 30, new Date('2026-03-31'));
+    expect(record.source).toBe('image');
+  });
+
   test('defaults source to manual when not provided or invalid', () => {
     const record1 = buildProductRecord(input, 30, new Date('2026-03-31'));
     expect(record1.source).toBe('manual');

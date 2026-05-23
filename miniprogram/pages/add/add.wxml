@@ -1,6 +1,6 @@
 <!--
   添加产品页
-  双模式：链接导入 / 手动录入
+  双模式：拍照识别 / 手动录入
   设计参考: design-system/pages/add.md
 -->
 <view class="page-add">
@@ -8,10 +8,10 @@
   <!-- 模式切换 Tab -->
   <view class="mode-switcher">
     <view
-      class="mode-tab {{mode === 'link' ? 'mode-tab-active' : ''}}"
+      class="mode-tab {{mode === 'image' ? 'mode-tab-active' : ''}}"
       bindtap="switchMode"
-      data-mode="link"
-    >链接导入</view>
+      data-mode="image"
+    >拍照识别</view>
     <view
       class="mode-tab {{mode === 'manual' ? 'mode-tab-active' : ''}}"
       bindtap="switchMode"
@@ -19,36 +19,49 @@
     >手动录入</view>
   </view>
 
-  <!-- 链接导入区域 -->
-  <view class="link-section" wx:if="{{mode === 'link'}}">
-    <view class="link-input-row">
-      <input
-        class="input link-input"
-        placeholder="粘贴淘宝/天猫商品链接或淘口令"
-        value="{{linkText}}"
-        bindinput="onLinkInput"
-        disabled="{{parsing}}"
-      />
-      <button
-        class="btn-primary btn-parse"
-        bindtap="onParseTap"
-        disabled="{{parsing || !linkText}}"
-      >
-        <text wx:if="{{!parsing}}">解析</text>
-        <text wx:else>解析中...</text>
-      </button>
+  <!-- 拍照识别区域 -->
+  <view class="image-section" wx:if="{{mode === 'image'}}">
+
+    <!-- 未选择图片时：上传引导区 -->
+    <view class="image-upload-area" bindtap="onChooseImage" wx:if="{{!imagePath && !recognizing}}">
+      <view class="upload-icon-wrapper">
+        <!-- 相机图标 SVG -->
+        <image class="upload-icon" src="/images/camera.svg" mode="aspectFit" />
+      </view>
+      <text class="upload-title">拍照或选择商品包装图片</text>
+      <text class="upload-hint">支持商品包装、标签、参数截图</text>
     </view>
 
-    <!-- 解析失败提示（链接模式内显示） -->
-    <view class="parse-result parse-fail" wx:if="{{parseStatus === 'fail'}}">
-      <text>{{parseError}}</text>
+    <!-- 已选择图片：预览 + 识别中状态 -->
+    <view class="image-preview-area" wx:if="{{imagePath}}">
+      <image class="image-preview" src="{{imagePath}}" mode="aspectFill" bindtap="onChooseImage" />
+      <view class="image-preview-overlay" wx:if="{{recognizing}}">
+        <view class="recognizing-spinner"></view>
+        <text class="recognizing-text">正在识别...</text>
+      </view>
+      <view class="image-actions" wx:if="{{!recognizing}}">
+        <text class="image-action-btn" bindtap="onChooseImage">重新选择</text>
+      </view>
+    </view>
+
+    <!-- 识别失败提示 -->
+    <view class="parse-result parse-fail" wx:if="{{recognizeStatus === 'fail'}}">
+      <text>{{recognizeError}}</text>
       <text class="switch-manual" bindtap="switchToManual">切换手动录入</text>
     </view>
   </view>
 
-  <!-- 解析成功提示（全局显示，不受模式切换影响） -->
-  <view class="parse-result parse-success" wx:if="{{parseStatus === 'success'}}">
+  <!-- 识别成功提示（全局显示，不受模式切换影响） -->
+  <view class="parse-result parse-success" wx:if="{{recognizeStatus === 'success'}}">
     <text>识别成功：{{parsedName}}</text>
+  </view>
+
+  <!-- 默认值填充提醒 -->
+  <view class="parse-result parse-warning" wx:if="{{recognizeStatus === 'success' && defaultedFields.length > 0}}">
+    <text class="warning-title">以下必填字段已自动填充默认值，请核实修改：</text>
+    <view class="defaulted-field-list">
+      <text class="defaulted-field-tag" wx:for="{{defaultedFields}}" wx:key="*this">{{item}}</text>
+    </view>
   </view>
 
   <!-- 表单区域 -->
