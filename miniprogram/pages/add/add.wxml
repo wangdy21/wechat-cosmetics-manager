@@ -93,7 +93,7 @@
     <!-- 分类选择 -->
     <view class="form-item">
       <text class="form-label">分类 <text class="required">*</text></text>
-      <view class="category-tags" wx:if="{{categories.length > 0}}">
+      <view class="category-tags">
         <view
           wx:for="{{categories}}"
           wx:key="_id"
@@ -101,10 +101,7 @@
           bindtap="onCategoryTap"
           data-name="{{item.name}}"
         >{{item.name}}</view>
-      </view>
-      <view class="category-empty" wx:else>
-        <text class="category-empty-text">还没有分类，</text>
-        <text class="category-empty-link" bindtap="goCategoryManage">去创建分类</text>
+        <view class="category-tag category-tag-add" bindtap="onAddCategory">+</view>
       </view>
     </view>
 

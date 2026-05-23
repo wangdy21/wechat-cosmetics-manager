@@ -56,6 +56,15 @@
   border-color: var(--color-primary);
 }
 
+.category-tag-add {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-bg);
+  min-width: 36px;
+  text-align: center;
+  font-size: var(--font-body-size);
+}
+
 /* 分类空状态 */
 .category-empty {
   padding: var(--space-md) var(--space-lg);

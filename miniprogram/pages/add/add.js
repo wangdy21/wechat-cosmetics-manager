@@ -188,11 +188,6 @@ Page({
     });
   },
 
-  // --- 跳转分类管理页 ---
-  goCategoryManage() {
-    wx.navigateTo({ url: '/pages/category/category' });
-  },
-
   // --- 模式切换 ---
   switchMode(e) {
     const mode = e.currentTarget.dataset.mode;
@@ -368,6 +363,43 @@ Page({
 
   onCategoryTap(e) {
     this.setData({ 'form.category': e.currentTarget.dataset.name });
+  },
+
+  // --- 快速添加新分类 ---
+  onAddCategory() {
+    wx.showModal({
+      title: '新建分类',
+      editable: true,
+      placeholderText: '如：眼霜',
+      success: (res) => {
+        if (!res.confirm || !res.content) return;
+        const name = res.content.trim();
+        if (!name) {
+          wx.showToast({ title: '分类名称不能为空', icon: 'none' });
+          return;
+        }
+        if (name.length > 20) {
+          wx.showToast({ title: '分类名称不能超过20个字符', icon: 'none' });
+          return;
+        }
+        wx.cloud.callFunction({
+          name: 'productOps',
+          data: { action: 'categoryAdd', name },
+        }).then((cfRes) => {
+          const result = (cfRes && cfRes.result) || {};
+          if (!result.success) {
+            wx.showToast({ title: result.error || '创建失败', icon: 'none' });
+            return;
+          }
+          wx.showToast({ title: '分类已创建', icon: 'success' });
+          // 刷新分类列表并自动选中新分类
+          this.setData({ 'form.category': name });
+          this.loadCategories();
+        }).catch(() => {
+          wx.showToast({ title: '创建失败', icon: 'none' });
+        });
+      },
+    });
   },
 
   toggleOpened() {
