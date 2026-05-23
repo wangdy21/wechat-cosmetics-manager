@@ -28,16 +28,39 @@ function getRecordOwner(record) {
 }
 
 async function queryProducts(where, page, pageSize) {
-  const skip = (page - 1) * pageSize;
+  // 云数据库单次 get() 最多返回 100 条，需分批拉取
+  const MAX_LIMIT = 100;
+
   const countResult = await productsCollection.where(where).count();
   const total = countResult.total;
 
-  const { data: list } = await productsCollection
-    .where(where)
-    .orderBy('expirationDate', 'asc')
-    .skip(skip)
-    .limit(pageSize)
-    .get();
+  // 需要获取的记录数 = 本页应有的条数（考虑实际总量）
+  const skip = (page - 1) * pageSize;
+  const needed = Math.min(pageSize, Math.max(0, total - skip));
+
+  if (needed <= 0) {
+    return { list: [], total, page, pageSize };
+  }
+
+  // 分批拉取，每批最多 MAX_LIMIT 条
+  let list = [];
+  let batchSkip = skip;
+  let remaining = needed;
+
+  while (remaining > 0) {
+    const batchLimit = Math.min(remaining, MAX_LIMIT);
+    const { data: batch } = await productsCollection
+      .where(where)
+      .orderBy('expirationDate', 'asc')
+      .skip(batchSkip)
+      .limit(batchLimit)
+      .get();
+    list = list.concat(batch);
+    batchSkip += batch.length;
+    remaining -= batch.length;
+    // 批次返回不足预期，说明已无更多数据
+    if (batch.length < batchLimit) break;
+  }
 
   return { list, total, page, pageSize };
 }
@@ -68,6 +91,10 @@ exports.main = async (event, context) => {
         return await handleCategoryDelete(event, OPENID);
       case 'recognizeProduct':
         return await handleRecognizeProduct(event, OPENID);
+      case 'settingsGet':
+        return await handleSettingsGet(event, OPENID);
+      case 'settingsSave':
+        return await handleSettingsSave(event, OPENID);
       default:
         return { success: false, error: '未知操作: ' + action };
     }
@@ -78,7 +105,13 @@ exports.main = async (event, context) => {
 
 async function getAdvanceDays(openid) {
   try {
-    const { data } = await settingsCollection.where({ _openid: openid }).limit(1).get();
+    const { data } = await settingsCollection
+      .where(_.or([
+        { ownerOpenid: openid },
+        { _openid: openid },
+      ]))
+      .limit(1)
+      .get();
     return data.length > 0 ? data[0].advanceDays : 30;
   } catch (e) {
     return 30;
@@ -309,4 +342,51 @@ async function handleRecognizeProduct(event, openid) {
       rawText: lines.join('\n'),
     },
   };
+}
+
+// --- 设置操作 ---
+
+async function handleSettingsGet(event, openid) {
+  const { data } = await settingsCollection
+    .where(_.or([
+      { ownerOpenid: openid },
+      { _openid: openid },
+    ]))
+    .limit(1)
+    .get();
+  if (data.length > 0) {
+    return { success: true, data: data[0] };
+  }
+  return { success: true, data: null };
+}
+
+async function handleSettingsSave(event, openid) {
+  const { advanceDays, enablePush, pushFrequency } = event;
+
+  const { data: existing } = await settingsCollection
+    .where(_.or([
+      { ownerOpenid: openid },
+      { _openid: openid },
+    ]))
+    .limit(1)
+    .get();
+
+  const updates = {};
+  if (advanceDays !== undefined) updates.advanceDays = advanceDays;
+  if (enablePush !== undefined) updates.enablePush = enablePush;
+  if (pushFrequency !== undefined) updates.pushFrequency = pushFrequency;
+
+  if (existing.length > 0) {
+    await settingsCollection.doc(existing[0]._id).update({ data: updates });
+    return { success: true };
+  }
+
+  const record = {
+    ownerOpenid: openid,
+    advanceDays: advanceDays || 30,
+    enablePush: enablePush || false,
+    pushFrequency: pushFrequency || 'daily',
+  };
+  await settingsCollection.add({ data: record });
+  return { success: true };
 }

@@ -30,8 +30,10 @@ Page({
         return;
       }
 
-      const products = (result.data && result.data.list) || [];
-      const total = products.length;
+      const payload = result.data || {};
+      const products = payload.list || [];
+      // 使用云函数返回的 total 而非 list.length，避免云数据库单次查询上限导致统计不准
+      const total = payload.total || 0;
 
       // 按分类统计
       const countMap = {};
@@ -51,26 +53,26 @@ Page({
       });
 
       this.setData({ totalProducts: total, categoryStats });
+    }).catch(() => {
+      // 加载失败时保持当前数据，避免清零
     });
   },
 
   // --- 加载提醒设置 ---
   loadSettings() {
-    const db = wx.cloud.database();
-    db.collection('reminder_settings')
-      .where({ _openid: '{openid}' })
-      .limit(1)
-      .get()
-      .then((res) => {
-        if (res.data && res.data.length > 0) {
-          const s = res.data[0];
-          this.setData({
-            advanceDays: s.advanceDays || 30,
-            enablePush: s.enablePush || false,
-            pushFrequency: s.pushFrequency || 'daily',
-          });
-        }
+    wx.cloud.callFunction({
+      name: 'productOps',
+      data: { action: 'settingsGet' },
+    }).then((res) => {
+      const result = (res && res.result) || {};
+      if (!result.success || !result.data) return;
+      const s = result.data;
+      this.setData({
+        advanceDays: s.advanceDays || 30,
+        enablePush: s.enablePush || false,
+        pushFrequency: s.pushFrequency || 'daily',
       });
+    }).catch(() => {});
   },
 
   // --- 推送开关 ---
@@ -82,27 +84,18 @@ Page({
 
   // --- 保存设置 ---
   saveSettings(updates) {
-    const db = wx.cloud.database();
-    db.collection('reminder_settings')
-      .where({ _openid: '{openid}' })
-      .limit(1)
-      .get()
-      .then((res) => {
-        if (res.data && res.data.length > 0) {
-          db.collection('reminder_settings')
-            .doc(res.data[0]._id)
-            .update({ data: updates });
-        } else {
-          db.collection('reminder_settings').add({
-            data: {
-              advanceDays: this.data.advanceDays,
-              enablePush: this.data.enablePush,
-              pushFrequency: this.data.pushFrequency,
-              ...updates,
-            },
-          });
-        }
-      });
+    wx.cloud.callFunction({
+      name: 'productOps',
+      data: {
+        action: 'settingsSave',
+        advanceDays: this.data.advanceDays,
+        enablePush: this.data.enablePush,
+        pushFrequency: this.data.pushFrequency,
+        ...updates,
+      },
+    }).catch(() => {
+      wx.showToast({ title: '保存失败', icon: 'none' });
+    });
   },
 
   // --- 跳转分类管理 ---
