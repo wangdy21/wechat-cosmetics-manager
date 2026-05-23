@@ -5,7 +5,8 @@
     "pages/inventory/inventory",
     "pages/profile/profile",
     "pages/detail/detail",
-    "pages/category/category"
+    "pages/category/category",
+    "pages/edit/edit"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FFFBF5",

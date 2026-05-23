@@ -64,13 +64,19 @@
   <!-- 操作按钮区 -->
   <view class="action-section" wx:if="{{product.status !== 'used_up' && product.status !== 'discarded'}}">
     <view class="action-row">
+      <button class="btn-action btn-edit" bindtap="onEdit">编辑产品</button>
       <button class="btn-action btn-used" bindtap="onMarkUsedUp">标记用完</button>
+    </view>
+    <view class="action-row">
       <button class="btn-action btn-discard" bindtap="onMarkDiscarded">标记丢弃</button>
     </view>
   </view>
   <view class="action-section" wx:else>
-    <view class="done-badge">
-      <text class="done-text">{{product.status === 'used_up' ? '已用完' : '已丢弃'}}</text>
+    <view class="done-row">
+      <view class="done-badge">
+        <text class="done-text">{{product.status === 'used_up' ? '已用完' : '已丢弃'}}</text>
+      </view>
+      <button class="btn-action btn-edit" bindtap="onEdit">编辑产品</button>
     </view>
   </view>
 

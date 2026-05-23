@@ -13,6 +13,7 @@ const categoriesCollection = db.collection('categories');
 
 const {
   validateAddInput,
+  validateUpdateInput,
   validateUpdateStatusInput,
   resolveStatus,
   buildProductRecord,
@@ -138,6 +139,9 @@ async function handleUpdate(event, openid) {
   delete updates.action;
   // 保护 source 字段：商品来源在创建时确定，编辑时不可修改
   delete updates.source;
+
+  const error = validateUpdateInput(updates);
+  if (error) return { success: false, error };
 
   const { data: existing } = await productsCollection.doc(_id).get();
   if (getRecordOwner(existing) !== openid) {

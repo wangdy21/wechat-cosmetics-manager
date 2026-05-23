@@ -223,6 +223,11 @@
   border: none;
 }
 
+.btn-edit {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+}
+
 .btn-used {
   background-color: #F3F4F6;
   color: var(--color-text-secondary);
@@ -231,6 +236,24 @@
 .btn-discard {
   background-color: #F3F4F6;
   color: var(--color-text-secondary);
+}
+
+.action-row + .action-row {
+  margin-top: var(--space-md);
+}
+
+.done-row {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.done-row .done-badge {
+  flex: 1;
+}
+
+.done-row .btn-action {
+  flex: 1;
 }
 
 .done-badge {

@@ -17,6 +17,19 @@ function validateAddInput(data) {
 }
 
 /**
+ * 校验更新产品的输入
+ * 仅校验提交的字段，未提交的字段不校验
+ * @returns {string|null} 错误信息，null 表示通过
+ */
+function validateUpdateInput(data) {
+  if (data.name !== undefined && !data.name.trim()) return '产品名称不能为空';
+  if (data.category !== undefined && !data.category.trim()) return '分类不能为空';
+  if (data.productionDate !== undefined && !data.productionDate) return '生产日期不能为空';
+  if (data.shelfLifeMonths !== undefined && (!data.shelfLifeMonths || data.shelfLifeMonths <= 0)) return '保质期必须大于0';
+  return null;
+}
+
+/**
  * 校验用户主动标记状态的输入
  * @returns {string|null} 错误信息
  */
@@ -102,6 +115,7 @@ function recalcOnUpdate(existing, updates, advanceDays, now) {
 
 module.exports = {
   validateAddInput,
+  validateUpdateInput,
   validateUpdateStatusInput,
   resolveStatus,
   buildProductRecord,

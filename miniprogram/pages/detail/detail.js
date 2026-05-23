@@ -21,10 +21,19 @@ Page({
   onLoad(options) {
     if (options.id) {
       this.productId = options.id;
+      this._loaded = true;
       this.loadProduct(options.id);
     } else {
       this.setData({ loadError: '缺少产品 ID' });
     }
+  },
+
+  onShow() {
+    // 从编辑页返回时刷新产品数据（跳过首次加载，onLoad 已处理）
+    if (this._loaded && this.productId) {
+      this.loadProduct(this.productId);
+    }
+    this._loaded = true;
   },
 
   // --- 加载产品 ---
@@ -96,6 +105,11 @@ Page({
         });
       },
     });
+  },
+
+  // --- 编辑产品 ---
+  onEdit() {
+    wx.navigateTo({ url: `/pages/edit/edit?id=${this.productId}` });
   },
 
   // --- 删除产品 ---
