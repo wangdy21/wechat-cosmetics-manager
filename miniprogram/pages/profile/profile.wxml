@@ -34,7 +34,7 @@
   <view class="section">
     <text class="section-label">提醒设置</text>
     <view class="settings-group card">
-      <view class="setting-item">
+      <view class="setting-item" bindtap="onAdvanceDaysTap">
         <text class="setting-name">提前提醒天数</text>
         <view class="setting-right">
           <text class="setting-value">{{advanceDays}} 天</text>
@@ -50,7 +50,7 @@
           color="#FF6B8A"
         />
       </view>
-      <view class="setting-item" wx:if="{{enablePush}}">
+      <view class="setting-item" wx:if="{{enablePush}}" bindtap="onPushFrequencyTap">
         <text class="setting-name">推送频率</text>
         <view class="setting-right">
           <text class="setting-value">{{pushFrequency === 'daily' ? '每天' : '每周'}}</text>

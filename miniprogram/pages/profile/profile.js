@@ -82,6 +82,43 @@ Page({
     this.saveSettings({ enablePush });
   },
 
+  // --- 提前提醒天数选择 ---
+  onAdvanceDaysTap() {
+    const options = ['7', '14', '30', '60', '90'];
+    const currentIndex = options.indexOf(String(this.data.advanceDays));
+    wx.showActionSheet({
+      itemList: options.map((d) => d + ' 天'),
+      itemColor: '#333',
+      success: (res) => {
+        if (res.tapIndex !== currentIndex) {
+          const advanceDays = Number(options[res.tapIndex]);
+          this.setData({ advanceDays });
+          this.saveSettings({ advanceDays });
+        }
+      },
+    });
+  },
+
+  // --- 推送频率选择 ---
+  onPushFrequencyTap() {
+    const options = [
+      { value: 'daily', label: '每天' },
+      { value: 'weekly', label: '每周' },
+    ];
+    const currentIndex = options.findIndex((o) => o.value === this.data.pushFrequency);
+    wx.showActionSheet({
+      itemList: options.map((o) => o.label),
+      itemColor: '#333',
+      success: (res) => {
+        if (res.tapIndex !== currentIndex) {
+          const pushFrequency = options[res.tapIndex].value;
+          this.setData({ pushFrequency });
+          this.saveSettings({ pushFrequency });
+        }
+      },
+    });
+  },
+
   // --- 保存设置 ---
   saveSettings(updates) {
     wx.cloud.callFunction({
