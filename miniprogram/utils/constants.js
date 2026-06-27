@@ -2,6 +2,9 @@
  * 常量定义
  * 状态枚举、品牌词库、解析工具
  * 分类完全由用户自定义，存储在云数据库 categories 集合中
+ *
+ * 注意：以下品牌识别工具（BRAND_LIST、matchBrand、extractSpecification）
+ * 仅用于淘宝链接解析（parseLink），图片识别已改用 MiMo 多模态模型。
  */
 
 const PRODUCT_STATUS = {

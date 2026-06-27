@@ -1,6 +1,7 @@
 /**
  * 图像识别工具
  * 职责：图片选择、上传到云存储、调用云函数识别商品信息
+ * 注：识别由 MiMo 多模态大模型（productOps 云函数）完成
  */
 
 /**
@@ -62,7 +63,7 @@ function generateCloudPath() {
  *   name: string,
  *   specification: string,
  *   category: string,
- *   rawText: string,
+ *   rawResponse: string,
  *   imageFileID: string,
  *   error: string
  * }>}
@@ -112,7 +113,7 @@ async function recognizeFromImage() {
       productionDate: result.data.productionDate || null,
       expiryDate: result.data.expiryDate || null,
       remainingDays: result.data.remainingDays !== undefined ? result.data.remainingDays : null,
-      rawText: result.data.rawText || '',
+      rawResponse: result.data.rawResponse || '',
       imageFileID: fileID,
       localPath: filePath,
     };

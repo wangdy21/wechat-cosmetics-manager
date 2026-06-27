@@ -19,8 +19,7 @@ const {
   buildProductRecord,
   recalcOnUpdate,
 } = require('./logic');
-const { callOCR } = require('./ocr');
-const { extractProductInfo } = require('./textParser');
+const { callMiMo } = require('./mimo');
 const { calcRemainingDays } = require('./date');
 
 function getRecordOwner(record) {
@@ -294,6 +293,40 @@ async function handleCategoryDelete(event, openid) {
 
 // --- 图片识别操作 ---
 
+/**
+ * 将 MiMo 内部错误消息映射为合约定义的面向用户错误
+ */
+function mapMiMoError(errMsg) {
+  if (errMsg === 'MiMo 返回内容为空') return '未能识别，请手动录入';
+  if (errMsg.indexOf('MiMo 响应解析失败') === 0) return '识别结果异常，请手动录入';
+  if (errMsg.indexOf('MiMo 请求失败') === 0) return '识别服务暂时不可用';
+  if (errMsg.indexOf('MiMo HTTP') === 0) return '识别服务暂时不可用';
+  return errMsg;
+}
+
+/**
+ * 校验 MiMo 返回的商品信息字段类型
+ */
+function normalizeMiMoInfo(info) {
+  if (info.shelfLifeMonths !== null && info.shelfLifeMonths !== undefined) {
+    info.shelfLifeMonths = Number(info.shelfLifeMonths);
+    if (isNaN(info.shelfLifeMonths)) info.shelfLifeMonths = null;
+  }
+
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (info.expiryDate && !dateRegex.test(info.expiryDate)) info.expiryDate = null;
+  if (info.productionDate && !dateRegex.test(info.productionDate)) info.productionDate = null;
+
+  // 空字符串 → null
+  ['brand', 'name', 'specification', 'category'].forEach(function (field) {
+    if (typeof info[field] === 'string' && info[field].trim() === '') {
+      info[field] = null;
+    }
+  });
+
+  return info;
+}
+
 async function handleRecognizeProduct(event, openid) {
   const { fileID } = event;
   if (!fileID) return { success: false, error: '缺少图片文件' };
@@ -307,20 +340,16 @@ async function handleRecognizeProduct(event, openid) {
     return { success: false, error: '图片下载失败' };
   }
 
-  // 调用 OCR 识别
-  let lines;
+  // 调用 MiMo 多模态识别
+  let miMoResult;
   try {
-    lines = await callOCR(imageBuffer);
+    miMoResult = await callMiMo(imageBuffer);
   } catch (e) {
-    return { success: false, error: e.message || '文字识别失败，请手动录入' };
+    return { success: false, error: mapMiMoError(e.message) };
   }
 
-  if (!lines || lines.length === 0) {
-    return { success: false, error: '未能从图片中识别到文字，请拍摄更清晰的商品包装' };
-  }
-
-  // 解析文本提取商品信息
-  const info = extractProductInfo(lines);
+  // 校验并标准化字段类型
+  const info = normalizeMiMoInfo(miMoResult.info);
 
   // 计算剩余保质期天数
   let remainingDays = null;
@@ -339,7 +368,7 @@ async function handleRecognizeProduct(event, openid) {
       productionDate: info.productionDate,
       expiryDate: info.expiryDate,
       remainingDays: remainingDays,
-      rawText: lines.join('\n'),
+      rawResponse: miMoResult.rawContent,
     },
   };
 }
