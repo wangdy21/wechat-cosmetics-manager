@@ -2,7 +2,7 @@
  * productOps 业务逻辑
  * 纯函数，不依赖 wx-server-sdk，可独立测试
  */
-const { calcExpirationDate, calcRemainingDays } = require('./date');
+const { calcExpirationDate, calcRemainingDays, addMonths } = require('./date');
 
 /**
  * 校验添加产品的输入
@@ -113,6 +113,41 @@ function recalcOnUpdate(existing, updates, advanceDays, now) {
   return result;
 }
 
+const DEFAULT_SHELF_LIFE_MONTHS = 36;
+
+/**
+ * 根据包装日期和保质期推断生产日期
+ *
+ * @param {string|null} packageDate 包装上印刷的日期 YYYY-MM-DD
+ * @param {number|null} shelfLifeMonths 保质期月数
+ * @param {string|Date} today 当前日期
+ * @returns {{ productionDate: string|null, shelfLifeMonths: number }}
+ */
+function inferDates(packageDate, shelfLifeMonths, today) {
+  const months = (shelfLifeMonths && shelfLifeMonths > 0) ? shelfLifeMonths : DEFAULT_SHELF_LIFE_MONTHS;
+
+  if (!packageDate) {
+    return { productionDate: null, shelfLifeMonths: months };
+  }
+
+  const pkgTime = new Date(packageDate + 'T00:00:00').getTime();
+  const nowTime = new Date(today).getTime();
+
+  if (pkgTime > nowTime) {
+    // 未来日期 → 有效期至 → 反推生产日期
+    const prodDate = addMonths(packageDate, -months);
+    const prodTime = new Date(prodDate + 'T00:00:00').getTime();
+    if (prodTime > nowTime) {
+      // 反推后仍在未来（不合理），降级为 packageDate 即生产日期
+      return { productionDate: packageDate, shelfLifeMonths: months };
+    }
+    return { productionDate: prodDate, shelfLifeMonths: months };
+  }
+
+  // 过去日期 → 生产日期
+  return { productionDate: packageDate, shelfLifeMonths: months };
+}
+
 module.exports = {
   validateAddInput,
   validateUpdateInput,
@@ -120,4 +155,5 @@ module.exports = {
   resolveStatus,
   buildProductRecord,
   recalcOnUpdate,
+  inferDates,
 };

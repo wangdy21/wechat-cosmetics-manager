@@ -107,10 +107,16 @@ describe('callMiMo', () => {
     expect(payload.thinking).toEqual({ type: 'disabled' });
     expect(payload.max_completion_tokens).toBe(1024);
     expect(payload.messages[0].role).toBe('system');
-    expect(payload.messages[1].role).toBe('developer');
-    expect(typeof payload.messages[1].content).toBe('string');
-    expect(payload.messages[1].content).toMatch(/^请从这张化妆品包装图片中提取以下信息/);
-    expect(payload.messages[1].content).toMatch(/!\[cosmetic\]\(data:image\/jpeg;base64,/);
+    expect(payload.messages[1].role).toBe('user');
+    // Vision API 格式：content 应为数组
+    expect(Array.isArray(payload.messages[1].content)).toBe(true);
+    expect(payload.messages[1].content[0].type).toBe('text');
+    expect(payload.messages[1].content[0].text).toMatch(/^请从这张化妆品包装图片中提取以下信息/);
+    expect(payload.messages[1].content[1].type).toBe('image_url');
+    expect(payload.messages[1].content[1].image_url.url).toMatch(/^data:image\/jpeg;base64,/);
+    // 新 prompt 应包含 packageDate 而非 expiryDate/productionDate
+    expect(payload.messages[1].content[0].text).toMatch(/packageDate/);
+    expect(payload.messages[1].content[0].text).not.toMatch(/expiryDate/);
   });
 
   // --- 请求选项 ---
@@ -138,7 +144,7 @@ describe('callMiMo', () => {
     expect(capturedOptions.hostname).toBe('api.xiaomimimo.com');
     expect(capturedOptions.path).toBe('/v1/chat/completions');
     expect(capturedOptions.method).toBe('POST');
-    expect(capturedOptions.timeout).toBe(30000);
+    expect(capturedOptions.timeout).toBe(45000);
     expect(capturedOptions.headers['api-key']).toBe('test-api-key');
     expect(capturedOptions.headers['Content-Type']).toBe('application/json');
   });
@@ -275,6 +281,25 @@ describe('callMiMo', () => {
     });
 
     await expect(callMiMo(Buffer.from('test'))).rejects.toThrow('MiMo 请求失败');
+  });
+
+  // --- 请求超时 ---
+
+  test('rejects on request timeout', async () => {
+    https.request.mockImplementation(function (options, callback) {
+      const req = {
+        on: function (event, cb) {
+          if (event === 'timeout') cb();
+          return this;
+        },
+        write: function () {},
+        end: function () {},
+        destroy: function () {},
+      };
+      return req;
+    });
+
+    await expect(callMiMo(Buffer.from('test'))).rejects.toThrow('MiMo 请求超时，请稍后重试');
   });
 
   // --- null 字段处理 ---

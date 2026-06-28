@@ -18,6 +18,7 @@ const {
   resolveStatus,
   buildProductRecord,
   recalcOnUpdate,
+  inferDates,
 } = require('./logic');
 const { callMiMo } = require('./mimo');
 const { calcRemainingDays } = require('./date');
@@ -299,6 +300,7 @@ async function handleCategoryDelete(event, openid) {
 function mapMiMoError(errMsg) {
   if (errMsg === 'MiMo 返回内容为空') return '未能识别，请手动录入';
   if (errMsg.indexOf('MiMo 响应解析失败') === 0) return '识别结果异常，请手动录入';
+  if (errMsg.indexOf('MiMo 请求超时') === 0) return '识别服务繁忙，请稍后重试';
   if (errMsg.indexOf('MiMo 请求失败') === 0) return '识别服务暂时不可用';
   if (errMsg.indexOf('MiMo HTTP') === 0) return '识别服务暂时不可用';
   return errMsg;
@@ -314,8 +316,7 @@ function normalizeMiMoInfo(info) {
   }
 
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  if (info.expiryDate && !dateRegex.test(info.expiryDate)) info.expiryDate = null;
-  if (info.productionDate && !dateRegex.test(info.productionDate)) info.productionDate = null;
+  if (info.packageDate && !dateRegex.test(info.packageDate)) info.packageDate = null;
 
   // 空字符串 → null
   ['brand', 'name', 'specification', 'category'].forEach(function (field) {
@@ -351,10 +352,18 @@ async function handleRecognizeProduct(event, openid) {
   // 校验并标准化字段类型
   const info = normalizeMiMoInfo(miMoResult.info);
 
-  // 计算剩余保质期天数
+  // 根据包装日期推断生产日期
+  const today = new Date();
+  const inferred = inferDates(info.packageDate, info.shelfLifeMonths, today);
+
+  // 计算剩余保质期天数（基于 expireDate 推断后再算）
   let remainingDays = null;
-  if (info.expiryDate) {
-    remainingDays = calcRemainingDays(info.expiryDate, new Date());
+  if (info.packageDate) {
+    // 如果 packageDate 被当作有效期至，计算剩余天数
+    const pkgTime = new Date(info.packageDate + 'T00:00:00').getTime();
+    if (pkgTime > today.getTime()) {
+      remainingDays = calcRemainingDays(info.packageDate, today);
+    }
   }
 
   return {
@@ -364,10 +373,9 @@ async function handleRecognizeProduct(event, openid) {
       name: info.name,
       specification: info.specification,
       category: info.category,
-      shelfLifeMonths: info.shelfLifeMonths,
-      productionDate: info.productionDate,
-      expiryDate: info.expiryDate,
-      remainingDays: remainingDays,
+      shelfLifeMonths: inferred.shelfLifeMonths,
+      productionDate: inferred.productionDate,
+      packageDate: info.packageDate,
       rawResponse: miMoResult.rawContent,
     },
   };

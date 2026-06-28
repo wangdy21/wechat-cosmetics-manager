@@ -127,7 +127,7 @@ Page({
         return;
       }
 
-      // 识别成功：填充表单（MiMo 直接返回结构化 JSON）
+      // 识别成功：云函数已推断生产日期和保质期
       const data = result.data || {};
       const formData = {
         name: data.name || '',
@@ -142,7 +142,7 @@ Page({
         defaultedFields.push('产品名称');
       }
 
-      // 必填字段：生产日期 —— 优先使用 MiMo 识别的生产日期，否则默认今天
+      // 必填字段：生产日期 —— 云函数已推断（未来日期→反推，过去日期→直接使用），null 时兜底今天
       if (data.productionDate) {
         formData.productionDate = data.productionDate;
       } else {
@@ -150,7 +150,7 @@ Page({
         defaultedFields.push('生产日期');
       }
 
-      // 必填字段：保质期（月） —— 优先使用 MiMo 识别的保质期，否则默认 36 个月
+      // 必填字段：保质期（月） —— 云函数已填充默认 36 月
       if (data.shelfLifeMonths && data.shelfLifeMonths > 0) {
         formData.shelfLifeMonths = String(data.shelfLifeMonths);
       } else {
@@ -158,19 +158,17 @@ Page({
         defaultedFields.push('保质期');
       }
 
-      // 如果有到期日期，显示剩余天数提示
-      if (data.remainingDays !== null && data.remainingDays !== undefined) {
-        if (data.remainingDays <= 0) {
-          wx.showToast({ title: '产品已过期', icon: 'none', duration: 2000 });
-        } else if (data.remainingDays <= 30) {
-          wx.showToast({ title: `剩余${data.remainingDays}天`, icon: 'none', duration: 2000 });
-        }
+      // 包装原始日期信息（供用户核对）
+      let parsedName = formData.name;
+      if (data.packageDate) {
+        const isExpiry = data.packageDate > this.data.today;
+        parsedName = formData.name + (isExpiry ? '（有效期至 ' : '（包装日期 ') + data.packageDate + '）';
       }
 
       this.setData({
         recognizing: false,
         recognizeStatus: 'success',
-        parsedName: formData.name,
+        parsedName: parsedName,
         imageFileID: fileID,
         defaultedFields,
         'form.name': formData.name,

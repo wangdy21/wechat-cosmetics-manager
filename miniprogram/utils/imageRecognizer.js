@@ -56,7 +56,31 @@ function generateCloudPath() {
 }
 
 /**
- * 完整的图片识别流程：选图 → 上传 → 调用云函数识别
+ * 压缩图片（缩小尺寸 + 降低质量）
+ * 微信 compressImage 不保证一定能缩小，但通常有效
+ * @param {string} src 源图片路径
+ * @returns {Promise<string>} 压缩后的图片路径
+ */
+function compressImage(src) {
+  return new Promise((resolve, reject) => {
+    wx.compressImage({
+      src,
+      quality: 70,
+      compressedWidth: 1024,
+      success: (res) => {
+        resolve(res.tempFilePath);
+      },
+      fail: (err) => {
+        // 压缩失败时降级使用原图
+        console.warn('[imageRecognizer] Image compress failed, using original:', err);
+        resolve(src);
+      },
+    });
+  });
+}
+
+/**
+ * 完整的图片识别流程：选图 → 压缩 → 上传 → 调用云函数识别
  * @returns {Promise<{
  *   success: boolean,
  *   brand: string,
@@ -81,14 +105,23 @@ async function recognizeFromImage() {
   }
 
   const filePath = paths[0];
+
+  // 1.5. 压缩图片（减小体积加速传输与识别）
+  let compressedPath = filePath;
+  try {
+    compressedPath = await compressImage(filePath);
+  } catch (e) {
+    // compressImage 内部已降级处理，此处兜底
+  }
+
   const cloudPath = generateCloudPath();
 
   // 2. 上传到云存储
   let fileID;
   try {
-    fileID = await uploadToCloud(filePath, cloudPath);
+    fileID = await uploadToCloud(compressedPath, cloudPath);
   } catch (err) {
-    return { success: false, error: '图片上传失败', localPath: filePath };
+    return { success: false, error: '图片上传失败', localPath: compressedPath };
   }
 
   // 3. 调用云函数识别
@@ -128,6 +161,7 @@ async function recognizeFromImage() {
 
 module.exports = {
   chooseImage,
+  compressImage,
   uploadToCloud,
   generateCloudPath,
   recognizeFromImage,
