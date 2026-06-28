@@ -1,7 +1,6 @@
 /**
- * 编辑产品页样式
- * 复用添加页表单样式
- * 设计参考: design-system/MASTER.md + design-system/pages/add.md
+ * 编辑产品页样式 — 暖暖梦幻版
+ * 与添加页保持一致的清新天蓝风格
  */
 
 .page-edit {
@@ -32,7 +31,7 @@
   color: var(--color-danger);
 }
 
-/* 分类标签组 */
+/* 分类标签组 — 天蓝风格 */
 .category-tags {
   display: flex;
   flex-wrap: wrap;
@@ -46,19 +45,20 @@
   font-weight: 600;
   color: var(--color-text-secondary);
   background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(93, 168, 208, 0.12);
   transition: all 200ms ease;
 }
 
 .category-tag-active {
-  background-color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
   color: #FFFFFF;
-  border-color: var(--color-primary);
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(93, 168, 208, 0.20);
 }
 
 .category-tag-add {
   color: var(--color-primary);
-  border-color: var(--color-primary);
+  border-color: rgba(93, 168, 208, 0.25);
   background-color: var(--color-primary-bg);
   min-width: 36px;
   text-align: center;
@@ -70,7 +70,7 @@
   padding: var(--space-md) var(--space-lg);
   background-color: var(--color-surface);
   border-radius: var(--radius-input);
-  border: 1px dashed var(--color-border);
+  border: 1px dashed rgba(93, 168, 208, 0.15);
   font-size: var(--font-caption-size);
   color: var(--color-text-tertiary);
 }
@@ -98,23 +98,24 @@
 }
 
 .expiry-preview-inner {
-  background-color: var(--color-info-bg);
+  background: linear-gradient(135deg, var(--color-info-bg), rgba(226, 241, 248, 0.5));
   border-radius: var(--radius-input);
   padding: var(--space-md) var(--space-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid rgba(107, 174, 208, 0.12);
 }
 
 .expiry-label {
   font-size: var(--font-caption-size);
-  color: #2563EB;
+  color: #3A8DBF;
   font-weight: 600;
 }
 
 .expiry-date {
   font-size: var(--font-body-size);
-  color: #1D4ED8;
+  color: #2171A8;
   font-weight: 700;
 }
 
@@ -131,7 +132,7 @@
   font-weight: 600;
 }
 
-/* 保存按钮 */
+/* 保存按钮 — 渐变天空蓝 */
 .save-section {
   padding: var(--space-lg) 0;
 }
@@ -142,8 +143,9 @@
   line-height: 48px;
   font-size: var(--font-h3-size);
   padding: 0;
+  box-shadow: 0 4px 16px rgba(93, 168, 208, 0.30);
 }
 
 .btn-save[disabled] {
-  opacity: 0.6;
+  opacity: 0.55;
 }

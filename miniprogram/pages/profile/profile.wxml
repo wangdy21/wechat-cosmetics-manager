@@ -1,23 +1,35 @@
 <!--
-  个人中心页
-  用户信息 + 库存统计 + 设置列表
-  设计参考: design-system/pages/profile.md
+  个人中心页 — 暖暖梦幻风格
+  角色展示区 + 库存统计 + 设置列表
 -->
 <view class="page-profile">
 
-  <!-- 用户信息区 -->
+  <!-- 暖暖角色展示头部 -->
   <view class="profile-header">
-    <view class="avatar">
-      <text class="avatar-text">U</text>
-    </view>
-    <view class="profile-info">
-      <text class="profile-title">我的美妆库</text>
+    <!-- 装饰背景 -->
+    <view class="profile-deco profile-deco-1"></view>
+    <view class="profile-deco profile-deco-2"></view>
+    <view class="profile-deco profile-deco-3"></view>
+
+    <view class="profile-header-inner">
+      <!-- 暖暖角色形象展示 -->
+      <view class="character-showcase">
+        <image
+          class="character-showcase-img"
+          src="/images/nuannuan-character.jpeg"
+          mode="aspectFill"
+        />
+      </view>
+      <view class="profile-info">
+        <text class="profile-title">暖暖美妆库</text>
+        <text class="profile-subtitle">用心守护每一件美妆 ✧</text>
+      </view>
     </view>
   </view>
 
   <!-- 库存统计 -->
   <view class="section" wx:if="{{categoryStats.length > 0}}">
-    <text class="section-label">库存统计</text>
+    <text class="section-label">📦 库存统计</text>
     <view class="category-stats">
       <view
         wx:for="{{categoryStats}}"
@@ -32,13 +44,13 @@
 
   <!-- 设置列表 · 提醒设置 -->
   <view class="section">
-    <text class="section-label">提醒设置</text>
+    <text class="section-label">⏰ 提醒设置</text>
     <view class="settings-group card">
       <view class="setting-item" bindtap="onAdvanceDaysTap">
         <text class="setting-name">提前提醒天数</text>
         <view class="setting-right">
           <text class="setting-value">{{advanceDays}} 天</text>
-          <text class="setting-arrow">></text>
+          <text class="setting-arrow">›</text>
         </view>
       </view>
       <view class="setting-item">
@@ -47,14 +59,14 @@
           class="setting-switch"
           checked="{{enablePush}}"
           bindchange="onPushToggle"
-          color="#FF6B8A"
+          color="#5BA8D0"
         />
       </view>
       <view class="setting-item" wx:if="{{enablePush}}" bindtap="onPushFrequencyTap">
         <text class="setting-name">推送频率</text>
         <view class="setting-right">
           <text class="setting-value">{{pushFrequency === 'daily' ? '每天' : '每周'}}</text>
-          <text class="setting-arrow">></text>
+          <text class="setting-arrow">›</text>
         </view>
       </view>
     </view>
@@ -62,12 +74,12 @@
 
   <!-- 设置列表 · 管理 -->
   <view class="section">
-    <text class="section-label">管理</text>
+    <text class="section-label">⚙ 管理</text>
     <view class="settings-group card">
       <view class="setting-item" bindtap="goCategory">
         <text class="setting-name">分类管理</text>
         <view class="setting-right">
-          <text class="setting-arrow">></text>
+          <text class="setting-arrow">›</text>
         </view>
       </view>
     </view>

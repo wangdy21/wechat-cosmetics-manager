@@ -9,15 +9,15 @@
     "pages/edit/edit"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#FFFBF5",
-    "navigationBarTitleText": "CosmeticBox",
+    "navigationBarBackgroundColor": "#E8F4FC",
+    "navigationBarTitleText": "暖暖美妆库",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#FFFBF5",
+    "backgroundColor": "#FDFFFA",
     "backgroundTextStyle": "dark"
   },
   "tabBar": {
-    "color": "#6B7280",
-    "selectedColor": "#FF6B8A",
+    "color": "#A0AEB5",
+    "selectedColor": "#5BA8D0",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "white",
     "list": [

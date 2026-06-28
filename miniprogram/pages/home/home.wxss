@@ -1,19 +1,134 @@
 /**
- * 首页样式
- * 设计参考: design-system/MASTER.md + design-system/pages/home.md
+ * 首页样式 — 暖暖梦幻版
+ * 天空渐变背景 + 玻璃拟态卡片 + 角色头像 + 梦幻装饰
+ * 设计灵感: 暖暖角色 · 自然、童话、柔和光效
  */
 
 .page-home {
   padding-bottom: 80px;
   min-height: 100vh;
+  background: linear-gradient(180deg, #E8F4FC 0%, #FDFFFA 35%, #FDFFFA 100%);
 }
 
-/* 顶部渐变区域 */
+/* ========== 顶部梦幻区域 ========== */
 .home-header {
   position: relative;
-  background: linear-gradient(135deg, #FFF0F3 0%, #EDE9FE 50%, #DCFCE7 100%);
+  /* 天空蓝 → 浅薄荷绿 渐变，模拟晴空 */
+  background: linear-gradient(
+    160deg,
+    #7EC8E3 0%,
+    #A8DDEE 25%,
+    #C5EBF0 50%,
+    #D4F0E2 75%,
+    #E2F6ED 100%
+  );
   padding: var(--space-xl) var(--space-lg) var(--space-2xl);
   overflow: hidden;
+  border-radius: 0 0 32px 32px;
+}
+
+/* ====== 梦幻装饰元素 ====== */
+.dream-deco {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* 云朵装饰 */
+.dream-cloud-1 {
+  width: 90px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.30);
+  border-radius: 20px;
+  top: 15px;
+  right: -10px;
+  filter: blur(2px);
+}
+
+.dream-cloud-1::before {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.30);
+  border-radius: 16px;
+  top: -12px;
+  left: 14px;
+}
+
+.dream-cloud-2 {
+  width: 60px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  top: 60px;
+  left: -10px;
+  filter: blur(1.5px);
+}
+
+/* 星光闪烁点 */
+.dream-sparkle-1 {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.70);
+  border-radius: 50%;
+  top: 30px;
+  right: 90px;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.dream-sparkle-2 {
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 248, 220, 0.60);
+  border-radius: 50%;
+  top: 85px;
+  right: 45px;
+  box-shadow: 0 0 6px rgba(255, 248, 220, 0.5);
+}
+
+/* 花瓣飘落装饰 */
+.dream-petal-1 {
+  width: 18px;
+  height: 18px;
+  background: rgba(232, 184, 109, 0.15);
+  border-radius: 50% 0 50% 50%;
+  transform: rotate(-30deg);
+  top: 110px;
+  right: 25px;
+}
+
+.dream-petal-2 {
+  width: 12px;
+  height: 12px;
+  background: rgba(93, 184, 156, 0.15);
+  border-radius: 50% 0 50% 50%;
+  transform: rotate(20deg);
+  top: 55px;
+  left: 50px;
+}
+
+/* ====== 头部顶行：问候语 + 暖暖头像 ====== */
+.header-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  margin-bottom: var(--space-xl);
+}
+
+.greeting-area {
+  flex: 1;
+}
+
+.greeting-text {
+  display: block;
+  font-size: var(--font-caption-size);
+  font-weight: 600;
+  color: rgba(45, 52, 54, 0.55);
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
 }
 
 .home-title {
@@ -22,79 +137,88 @@
   font-weight: 800;
   line-height: 1.3;
   color: var(--color-text-primary);
-  margin-bottom: var(--space-xl);
-  position: relative;
-  z-index: 1;
+  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.4);
 }
 
-/* 几何装饰 */
-.geo-circle {
-  position: absolute;
-  border-radius: var(--radius-full);
+/* ====== 暖暖角色圆形头像 ====== */
+.character-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 3px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 4px 16px rgba(93, 168, 208, 0.20),
+    0 0 0 1px rgba(255, 255, 255, 0.3);
+  animation: float-gentle 3s ease-in-out infinite;
 }
 
-.geo-1 {
-  width: 120px;
-  height: 120px;
-  background-color: rgba(255, 107, 138, 0.08);
-  top: -30px;
-  right: -20px;
+.character-img {
+  width: 100%;
+  height: 100%;
 }
 
-.geo-rect {
-  position: absolute;
-  border-radius: 6px;
-  transform: rotate(20deg);
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
 
-.geo-2 {
-  width: 40px;
-  height: 40px;
-  background-color: rgba(139, 92, 246, 0.08);
-  top: 20px;
-  right: 80px;
-}
-
-.geo-triangle {
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 25px solid transparent;
-  border-right: 25px solid transparent;
-  border-bottom: 43px solid rgba(52, 211, 153, 0.07);
-}
-
-.geo-3 {
-  bottom: 30px;
-  left: 20px;
-}
-
-/* 统计卡片行 */
+/* ====== 统计卡片行 — 玻璃拟态风格 ====== */
 .stat-row {
   display: flex;
   gap: var(--space-sm);
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .stat-card {
   flex: 1;
-  border-radius: var(--radius-card);
-  padding: var(--space-md);
+  border-radius: 18px;
+  padding: var(--space-md) var(--space-sm);
   text-align: center;
-  box-shadow: var(--shadow-card);
+  /* 玻璃拟态效果 */
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 4px 16px rgba(93, 168, 208, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .stat-safe {
-  background: linear-gradient(135deg, #DCFCE7, #A7F3D0);
+  background: rgba(255, 255, 255, 0.42);
 }
 
 .stat-warning {
-  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  background: rgba(255, 248, 230, 0.50);
+  border-color: rgba(232, 168, 56, 0.15);
 }
 
 .stat-rate {
-  background: linear-gradient(135deg, #EDE9FE, #C4B5FD);
+  background: rgba(235, 245, 250, 0.50);
+  border-color: rgba(93, 168, 208, 0.15);
+}
+
+/* 统计图标容器 */
+.stat-icon-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 6px;
+}
+
+.stat-icon-safe { background: rgba(76, 184, 156, 0.15); }
+.stat-icon-warn { background: rgba(232, 168, 56, 0.15); }
+.stat-icon-rate { background: rgba(93, 168, 208, 0.15); }
+
+.stat-icon-text {
+  font-size: 13px;
+  line-height: 1;
 }
 
 .stat-num {
@@ -115,25 +239,42 @@
   font-weight: 600;
   color: var(--color-text-secondary);
   margin-top: 2px;
+  letter-spacing: 0.5px;
 }
 
-/* 区块标题 */
+/* ====== 区块通用 ====== */
 .section {
   padding: var(--space-xl) var(--space-lg) 0;
 }
 
-.section-title {
-  display: block;
-  font-size: var(--font-h2-size);
-  font-weight: 700;
-  color: var(--color-text-primary);
+.section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin-bottom: var(--space-md);
 }
 
-/* 即将过期警告卡片 */
+.section-title-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.section-title {
+  display: inline-block;
+  font-size: var(--font-h2-size);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+/* ====== 即将过期警告卡片 ====== */
 .warning-card {
   margin-bottom: var(--space-md);
   border-left: 4px solid transparent;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.warning-card:active {
+  transform: scale(0.98);
 }
 
 .border-warning {
@@ -190,31 +331,48 @@
   color: var(--color-text-secondary);
 }
 
-/* 安全提示 */
+/* ====== 安全提示 — 暖暖祝福风格 ====== */
 .safe-banner {
   margin: var(--space-xl) var(--space-lg) 0;
-  background-color: var(--color-safe-bg);
+  background: linear-gradient(135deg, #F0FFF4, #E2F6ED);
   text-align: center;
+  border: 1px solid rgba(76, 184, 156, 0.12);
+}
+
+.safe-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.safe-icon {
+  font-size: 18px;
 }
 
 .safe-text {
   font-size: var(--font-body-size);
   font-weight: 600;
-  color: #059669;
+  color: #2D9B72;
 }
 
-/* 最近添加 */
+/* ====== 最近添加 ====== */
 .recent-card {
   display: flex;
   align-items: center;
   gap: var(--space-md);
   margin-bottom: var(--space-sm);
   padding: var(--space-md) var(--space-lg);
+  transition: transform 200ms ease;
+}
+
+.recent-card:active {
+  transform: scale(0.98);
 }
 
 .recent-icon {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--radius-icon);
   background: linear-gradient(135deg, var(--color-primary-bg), var(--color-secondary-bg));
   display: flex;
@@ -224,7 +382,7 @@
 }
 
 .recent-icon-text {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 800;
   color: var(--color-primary);
 }
@@ -268,29 +426,30 @@
   color: var(--color-primary);
 }
 
-/* 空状态 */
+/* ====== 空状态 — 带暖暖角色 ====== */
 .empty-home {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px var(--space-lg);
+  padding: 40px var(--space-lg) 60px;
 }
 
-.empty-icon {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--color-primary-bg), var(--color-secondary-bg));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: var(--space-lg);
+.empty-character {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: var(--space-xl);
+  border: 4px solid rgba(93, 168, 208, 0.15);
+  box-shadow:
+    0 8px 32px rgba(93, 168, 208, 0.12),
+    var(--shadow-glow);
+  animation: float-gentle 3s ease-in-out infinite;
 }
 
-.empty-icon-text {
-  font-size: 36px;
-  font-weight: 300;
-  color: var(--color-primary);
+.empty-character-img {
+  width: 100%;
+  height: 100%;
 }
 
 .empty-title {
@@ -309,12 +468,29 @@
 
 .btn-empty {
   padding: var(--space-md) var(--space-2xl);
+  box-shadow: 0 4px 16px rgba(93, 168, 208, 0.30);
 }
 
-/* 加载中 */
+/* ====== 加载中 — 梦幻加载动画 ====== */
 .loading {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: var(--space-2xl) 0;
+  gap: var(--space-md);
+}
+
+.loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(93, 168, 208, 0.15);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .loading-text {

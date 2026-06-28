@@ -1,30 +1,56 @@
 <!--
-  首页 — 概览仪表盘
-  渐变背景 + 统计卡片 + 即将过期警告 + 最近添加
-  设计参考: design-system/pages/home.md
+  首页 — 暖暖梦幻风格概览仪表盘
+  天空渐变背景 + 暖暖角色展示 + 统计卡片 + 即将过期警告
+  设计灵感: 暖暖 · 天空蓝 + 薄荷绿 + 梦幻光效
 -->
 <view class="page-home">
 
-  <!-- 顶部渐变区域 -->
+  <!-- 顶部梦幻区域 — 天空渐变 + 角色展示 -->
   <view class="home-header">
-    <!-- 几何装饰 -->
-    <view class="geo-circle geo-1"></view>
-    <view class="geo-rect geo-2"></view>
-    <view class="geo-triangle geo-3"></view>
+    <!-- 梦幻装饰元素：云朵/星光 -->
+    <view class="dream-deco dream-cloud-1"></view>
+    <view class="dream-deco dream-cloud-2"></view>
+    <view class="dream-deco dream-sparkle-1"></view>
+    <view class="dream-deco dream-sparkle-2"></view>
+    <view class="dream-deco dream-petal-1"></view>
+    <view class="dream-deco dream-petal-2"></view>
 
-    <text class="home-title">我的美妆库</text>
+    <!-- 问候语与标题区 -->
+    <view class="header-top-row">
+      <view class="greeting-area">
+        <text class="greeting-text">{{greeting}}</text>
+        <text class="home-title">我的美妆库</text>
+      </view>
+      <!-- 暖暖角色头像 -->
+      <view class="character-avatar" bindtap="onCharacterTap">
+        <image
+          class="character-img"
+          src="/images/nuannuan-character.jpeg"
+          mode="aspectFill"
+        />
+      </view>
+    </view>
 
-    <!-- 统计卡片行 -->
+    <!-- 统计卡片行 — 玻璃拟态风格 -->
     <view class="stat-row">
       <view class="stat-card stat-safe">
+        <view class="stat-icon-wrap stat-icon-safe">
+          <text class="stat-icon-text">✦</text>
+        </view>
         <text class="stat-num">{{stats.inUse}}</text>
         <text class="stat-label">在用</text>
       </view>
       <view class="stat-card stat-warning">
+        <view class="stat-icon-wrap stat-icon-warn">
+          <text class="stat-icon-text">⚡</text>
+        </view>
         <text class="stat-num">{{stats.attention}}</text>
         <text class="stat-label">注意</text>
       </view>
       <view class="stat-card stat-rate">
+        <view class="stat-icon-wrap stat-icon-rate">
+          <text class="stat-icon-text">♡</text>
+        </view>
         <text class="stat-num">{{stats.safeRate}}<text class="stat-unit">%</text></text>
         <text class="stat-label">安全率</text>
       </view>
@@ -33,7 +59,10 @@
 
   <!-- 即将过期警告区 -->
   <view class="section" wx:if="{{warningProducts.length > 0}}">
-    <text class="section-title">即将过期</text>
+    <view class="section-title-row">
+      <text class="section-title-icon">⏰</text>
+      <text class="section-title">即将过期</text>
+    </view>
     <view
       wx:for="{{warningProducts}}"
       wx:key="_id"
@@ -57,14 +86,20 @@
     </view>
   </view>
 
-  <!-- 安全提示 -->
+  <!-- 安全提示 — 暖暖风格祝福语 -->
   <view class="safe-banner card" wx:if="{{!loading && warningProducts.length === 0 && stats.inUse > 0}}">
-    <text class="safe-text">所有产品状态安全，继续保持！</text>
+    <view class="safe-banner-inner">
+      <text class="safe-icon">🌸</text>
+      <text class="safe-text">所有产品状态安全，继续保持！</text>
+    </view>
   </view>
 
   <!-- 最近添加 -->
   <view class="section" wx:if="{{recentProducts.length > 0}}">
-    <text class="section-title">最近添加</text>
+    <view class="section-title-row">
+      <text class="section-title-icon">✨</text>
+      <text class="section-title">最近添加</text>
+    </view>
     <view
       wx:for="{{recentProducts}}"
       wx:key="_id"
@@ -82,22 +117,27 @@
       <text class="recent-time">{{item._addedDate}}</text>
     </view>
     <view class="view-all" bindtap="goInventory">
-      <text class="view-all-text">查看全部</text>
+      <text class="view-all-text">查看全部 →</text>
     </view>
   </view>
 
-  <!-- 空状态 -->
+  <!-- 空状态 — 带暖暖角色的引导 -->
   <view class="empty-home" wx:if="{{!loading && stats.inUse === 0 && stats.attention === 0}}">
-    <view class="empty-icon">
-      <text class="empty-icon-text">+</text>
+    <view class="empty-character">
+      <image
+        class="empty-character-img"
+        src="/images/nuannuan-character.jpeg"
+        mode="aspectFit"
+      />
     </view>
-    <text class="empty-title">还没有产品</text>
-    <text class="empty-desc">添加第一件化妆品，开始管理保质期吧</text>
-    <button class="btn-primary btn-empty" bindtap="goAdd">添加产品</button>
+    <text class="empty-title">还没有产品哦～</text>
+    <text class="empty-desc">让暖暖帮你管理美妆保质期吧 ✧</text>
+    <button class="btn-primary btn-empty" bindtap="goAdd">添加第一件产品</button>
   </view>
 
   <!-- 加载中 -->
   <view class="loading" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
     <text class="loading-text">加载中...</text>
   </view>
 

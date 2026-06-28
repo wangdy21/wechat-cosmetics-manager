@@ -1,6 +1,6 @@
 /**
- * 分类管理页样式
- * 设计参考: design-system/MASTER.md + design-system/pages/category.md
+ * 分类管理页样式 — 暖暖梦幻版
+ * 清新天蓝边框 + 柔和卡片
  */
 
 .page-category {
@@ -16,9 +16,10 @@
 .section-label {
   display: block;
   font-size: var(--font-caption-size);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-tertiary);
   margin-bottom: var(--space-sm);
+  letter-spacing: 0.5px;
 }
 
 /* 分类列表 */
@@ -30,9 +31,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 48px;
+  height: 50px;
   padding: 0 var(--space-lg);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(93, 168, 208, 0.06);
+  transition: background-color 150ms ease;
+}
+
+.category-item:active {
+  background-color: rgba(93, 168, 208, 0.03);
 }
 
 .category-item:last-child {
@@ -42,11 +48,12 @@
 .category-name {
   font-size: var(--font-body-size);
   color: var(--color-text-primary);
+  font-weight: 500;
 }
 
 /* 预设分类 */
 .preset-item {
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .lock-icon {
@@ -72,16 +79,22 @@
   color: var(--color-text-tertiary);
 }
 
-/* 添加按钮 */
+/* 添加按钮 — 虚线天蓝风格 */
 .add-category-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
-  height: 48px;
-  border: 2px dashed var(--color-border);
+  height: 50px;
+  border: 2px dashed rgba(93, 168, 208, 0.20);
   border-radius: var(--radius-button);
   transition: all 200ms ease;
+  background: linear-gradient(135deg, rgba(232, 244, 252, 0.3), rgba(226, 246, 237, 0.15));
+}
+
+.add-category-btn:active {
+  background: linear-gradient(135deg, rgba(232, 244, 252, 0.6), rgba(226, 246, 237, 0.35));
+  border-color: var(--color-primary-lighter);
 }
 
 .add-icon {

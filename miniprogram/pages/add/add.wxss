@@ -1,6 +1,6 @@
 /**
- * 添加产品页样式
- * 设计参考: design-system/MASTER.md + design-system/pages/add.md
+ * 添加产品页样式 — 暖暖梦幻版
+ * 天蓝渐变按钮 + 柔和输入框 + 清新标签
  */
 
 .page-add {
@@ -10,14 +10,15 @@
   box-sizing: border-box;
 }
 
-/* 模式切换 Tab — 胶囊样式 */
+/* 模式切换 Tab — 梦幻胶囊样式 */
 .mode-switcher {
   display: flex;
-  background-color: var(--color-bg);
+  background-color: var(--color-surface);
   border-radius: var(--radius-button);
   padding: 3px;
   margin-bottom: var(--space-xl);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(93, 168, 208, 0.10);
+  box-shadow: var(--shadow-card);
 }
 
 .mode-tab {
@@ -27,14 +28,14 @@
   font-size: var(--font-body-size);
   font-weight: 600;
   color: var(--color-text-secondary);
-  border-radius: 10px;
-  transition: all 200ms ease;
+  border-radius: 12px;
+  transition: all 250ms ease;
 }
 
 .mode-tab-active {
-  background-color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
   color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(255, 107, 138, 0.3);
+  box-shadow: 0 3px 10px rgba(93, 168, 208, 0.30);
 }
 
 /* 拍照识别区域 */
@@ -42,22 +43,22 @@
   margin-bottom: var(--space-xl);
 }
 
-/* 上传引导区 */
+/* 上传引导区 — 天蓝色调 */
 .image-upload-area {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: var(--space-2xl) var(--space-lg);
-  background-color: var(--color-surface);
-  border: 2px dashed var(--color-border);
+  background: linear-gradient(135deg, rgba(232, 244, 252, 0.5), rgba(226, 246, 237, 0.3));
+  border: 2px dashed rgba(93, 168, 208, 0.20);
   border-radius: var(--radius-card);
   transition: all 200ms ease;
 }
 
 .image-upload-area:active {
-  background-color: var(--color-primary-bg);
-  border-color: var(--color-primary-lighter);
+  background: linear-gradient(135deg, rgba(232, 244, 252, 0.8), rgba(226, 246, 237, 0.5));
+  border-color: var(--color-primary-light);
 }
 
 .upload-icon-wrapper {
@@ -66,9 +67,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-primary-bg);
+  background: linear-gradient(135deg, var(--color-primary-bg), var(--color-secondary-bg));
   border-radius: var(--radius-icon);
   margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-glow);
 }
 
 .upload-icon {
@@ -94,6 +96,7 @@
   border-radius: var(--radius-card);
   overflow: hidden;
   background-color: var(--color-surface);
+  border: 1px solid rgba(93, 168, 208, 0.08);
 }
 
 .image-preview {
@@ -112,13 +115,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.45);
+  background-color: rgba(45, 52, 54, 0.40);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 
 .recognizing-spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  border: 3px solid rgba(255, 255, 255, 0.25);
   border-top-color: #FFFFFF;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -159,12 +164,12 @@
 
 .parse-success {
   background-color: var(--color-safe-bg);
-  color: #059669;
+  color: #2D9B72;
 }
 
 .parse-warning {
   background-color: var(--color-warning-bg);
-  color: #92400E;
+  color: #8B6914;
   margin-top: var(--space-sm);
 }
 
@@ -185,15 +190,15 @@
   display: inline-block;
   padding: 2px 8px;
   border-radius: var(--radius-tag);
-  background-color: rgba(251, 191, 36, 0.3);
-  color: #78350F;
+  background-color: rgba(232, 168, 56, 0.20);
+  color: #8B6914;
   font-size: var(--font-caption-size);
   font-weight: 600;
 }
 
 .parse-fail {
   background-color: var(--color-danger-bg);
-  color: #DC2626;
+  color: #C74B4B;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -226,7 +231,7 @@
   color: var(--color-danger);
 }
 
-/* 分类标签组 */
+/* 分类标签组 — 天蓝风格 */
 .category-tags {
   display: flex;
   flex-wrap: wrap;
@@ -240,19 +245,20 @@
   font-weight: 600;
   color: var(--color-text-secondary);
   background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(93, 168, 208, 0.12);
   transition: all 200ms ease;
 }
 
 .category-tag-active {
-  background-color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
   color: #FFFFFF;
-  border-color: var(--color-primary);
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(93, 168, 208, 0.20);
 }
 
 .category-tag-add {
   color: var(--color-primary);
-  border-color: var(--color-primary);
+  border-color: rgba(93, 168, 208, 0.25);
   background-color: var(--color-primary-bg);
   min-width: 36px;
   text-align: center;
@@ -264,7 +270,7 @@
   padding: var(--space-md) var(--space-lg);
   background-color: var(--color-surface);
   border-radius: var(--radius-input);
-  border: 1px dashed var(--color-border);
+  border: 1px dashed rgba(93, 168, 208, 0.15);
   font-size: var(--font-caption-size);
   color: var(--color-text-tertiary);
 }
@@ -292,23 +298,24 @@
 }
 
 .expiry-preview-inner {
-  background-color: var(--color-info-bg);
+  background: linear-gradient(135deg, var(--color-info-bg), rgba(226, 241, 248, 0.5));
   border-radius: var(--radius-input);
   padding: var(--space-md) var(--space-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid rgba(107, 174, 208, 0.12);
 }
 
 .expiry-label {
   font-size: var(--font-caption-size);
-  color: #2563EB;
+  color: #3A8DBF;
   font-weight: 600;
 }
 
 .expiry-date {
   font-size: var(--font-body-size);
-  color: #1D4ED8;
+  color: #2171A8;
   font-weight: 700;
 }
 
@@ -325,7 +332,7 @@
   font-weight: 600;
 }
 
-/* 保存按钮 */
+/* 保存按钮 — 渐变天空蓝 + 发光效果 */
 .save-section {
   padding: var(--space-lg) 0;
 }
@@ -336,8 +343,9 @@
   line-height: 48px;
   font-size: var(--font-h3-size);
   padding: 0;
+  box-shadow: 0 4px 16px rgba(93, 168, 208, 0.30);
 }
 
 .btn-save[disabled] {
-  opacity: 0.6;
+  opacity: 0.55;
 }

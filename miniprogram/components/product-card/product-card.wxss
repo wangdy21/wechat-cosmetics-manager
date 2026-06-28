@@ -1,9 +1,17 @@
 /**
- * 产品卡片组件样式
+ * 产品卡片组件样式 — 暖暖梦幻版
+ * 柔和圆角 + 天蓝系图标 + 渐变进度条
  */
 
 .product-card {
   margin-bottom: var(--space-md);
+  border: 1px solid rgba(93, 168, 208, 0.06);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.product-card:active {
+  transform: scale(0.98);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .card-top {
@@ -13,11 +21,11 @@
   margin-bottom: var(--space-md);
 }
 
-/* 图标容器 */
+/* 图标容器 — 更圆润柔和 */
 .card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-icon);
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,19 +33,19 @@
 }
 
 .icon-safe {
-  background: linear-gradient(135deg, #DCFCE7, #A7F3D0);
+  background: linear-gradient(145deg, #DCF5EB, #A8E6CF);
 }
 
 .icon-warning {
-  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  background: linear-gradient(145deg, #FDF3DC, #F0CA8A);
 }
 
 .icon-danger {
-  background: linear-gradient(135deg, #FEE2E2, #FCA5A5);
+  background: linear-gradient(145deg, #FCE8E4, #F0A0A0);
 }
 
 .icon-secondary {
-  background: linear-gradient(135deg, #F3F4F6, #E5E7EB);
+  background: linear-gradient(145deg, #F0F3F5, #DDE2E7);
 }
 
 .icon-text {
@@ -72,10 +80,10 @@
 .card-source-icon {
   font-size: 11px;
   margin-left: 4px;
-  opacity: 0.7;
+  opacity: 0.65;
 }
 
-/* 状态标签 */
+/* 状态标签 — 圆润药丸状 */
 .status-tag {
   flex-shrink: 0;
   padding: var(--space-xs) 10px;
@@ -86,21 +94,21 @@
 
 .tag-safe {
   background-color: var(--color-safe-bg);
-  color: #059669;
+  color: #2D9B72;
 }
 
 .tag-warning {
   background-color: var(--color-warning-bg);
-  color: #D97706;
+  color: #C87D0A;
 }
 
 .tag-danger {
   background-color: var(--color-danger-bg);
-  color: #DC2626;
+  color: #C74B4B;
 }
 
 .tag-secondary {
-  background-color: #F3F4F6;
+  background-color: #EEF2F5;
   color: var(--color-text-secondary);
 }
 
@@ -121,7 +129,7 @@
   font-weight: 600;
 }
 
-.text-safe { color: #059669; }
-.text-warning { color: #D97706; }
-.text-danger { color: #DC2626; }
+.text-safe { color: #2D9B72; }
+.text-warning { color: #C87D0A; }
+.text-danger { color: #C74B4B; }
 .text-secondary { color: var(--color-text-secondary); }

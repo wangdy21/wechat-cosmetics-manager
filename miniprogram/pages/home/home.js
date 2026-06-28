@@ -11,6 +11,7 @@ const ADVANCE_DAYS_DEFAULT = 30;
 Page({
   data: {
     loading: false,
+    greeting: '',
     stats: {
       inUse: 0,
       attention: 0,
@@ -22,7 +23,36 @@ Page({
   },
 
   onShow() {
+    this.setGreeting();
     this.loadDashboard();
+  },
+
+  /** 根据当前时间设置问候语 */
+  setGreeting() {
+    const hour = new Date().getHours();
+    let greeting = '你好呀 ✧';
+    if (hour >= 5 && hour < 11) {
+      greeting = '早上好 ☀️';
+    } else if (hour >= 11 && hour < 14) {
+      greeting = '中午好 🌤';
+    } else if (hour >= 14 && hour < 18) {
+      greeting = '下午好 ⛅';
+    } else if (hour >= 18 && hour < 22) {
+      greeting = '晚上好 🌙';
+    } else {
+      greeting = '夜深了 💫';
+    }
+    this.setData({ greeting });
+  },
+
+  /** 点击暖暖角色头像 */
+  onCharacterTap() {
+    wx.showModal({
+      title: '✨ 暖暖美妆库',
+      content: '我是暖暖～让我来帮你管理美妆保质期吧！',
+      showCancel: false,
+      confirmText: '好的 ✧',
+    });
   },
 
   // --- 加载仪表盘数据 ---

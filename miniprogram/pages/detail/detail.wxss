@@ -1,6 +1,6 @@
 /**
- * 产品详情页样式
- * 设计参考: design-system/MASTER.md + design-system/pages/detail.md
+ * 产品详情页样式 — 暖暖梦幻版
+ * 天蓝系图标 + 渐变状态卡片 + 柔和按钮
  */
 
 .page-detail {
@@ -8,6 +8,7 @@
   padding-bottom: 40px;
   min-height: 100vh;
   box-sizing: border-box;
+  background: var(--color-bg);
 }
 
 /* 产品头部卡片 */
@@ -22,17 +23,17 @@
 .header-icon {
   width: 64px;
   height: 64px;
-  border-radius: 18px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: var(--space-md);
 }
 
-.icon-safe { background: linear-gradient(135deg, #DCFCE7, #A7F3D0); }
-.icon-warning { background: linear-gradient(135deg, #FEF3C7, #FDE68A); }
-.icon-danger { background: linear-gradient(135deg, #FEE2E2, #FCA5A5); }
-.icon-secondary { background: linear-gradient(135deg, #F3F4F6, #E5E7EB); }
+.icon-safe { background: linear-gradient(145deg, #DCF5EB, #A8E6CF); }
+.icon-warning { background: linear-gradient(145deg, #FDF3DC, #F0CA8A); }
+.icon-danger { background: linear-gradient(145deg, #FCE8E4, #F0A0A0); }
+.icon-secondary { background: linear-gradient(145deg, #F0F3F5, #DDE2E7); }
 
 .header-icon-text {
   font-size: 28px;
@@ -84,18 +85,18 @@
 }
 
 .header-source-tag.source-link {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-  border-color: #a5d6a7;
+  background-color: rgba(76, 184, 156, 0.12);
+  color: #2D9B72;
+  border-color: rgba(76, 184, 156, 0.20);
 }
 
 .header-source-tag.source-manual {
-  background-color: #fff3e0;
-  color: #e65100;
-  border-color: #ffcc80;
+  background-color: rgba(232, 168, 56, 0.10);
+  color: #C87D0A;
+  border-color: rgba(232, 168, 56, 0.20);
 }
 
-/* 保质期状态卡片 */
+/* 保质期状态卡片 — 柔和渐变背景 */
 .expiry-card {
   display: flex;
   flex-direction: column;
@@ -104,10 +105,10 @@
   margin-bottom: var(--space-lg);
 }
 
-.expiry-safe { background-color: var(--color-safe-bg); }
-.expiry-warning { background-color: var(--color-warning-bg); }
-.expiry-danger { background-color: var(--color-danger-bg); }
-.expiry-secondary { background-color: #F3F4F6; }
+.expiry-safe { background: linear-gradient(135deg, #F2FCF7, #DFF5EA); }
+.expiry-warning { background: linear-gradient(135deg, #FEFBF0, #FDF0D6); }
+.expiry-danger { background: linear-gradient(135deg, #FDF2F1, #FAE0DD); }
+.expiry-secondary { background: linear-gradient(135deg, #F4F5F6, #EBEEF0); }
 
 .expiry-remaining-num {
   font-size: 28px;
@@ -133,7 +134,7 @@
 .detail-progress-bar {
   width: 100%;
   height: 8px;
-  background-color: rgba(0,0,0,0.08);
+  background-color: rgba(93, 168, 208, 0.08);
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: var(--space-lg);
@@ -175,7 +176,7 @@
   display: flex;
   justify-content: space-between;
   padding: var(--space-sm) 0;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(93, 168, 208, 0.06);
 }
 
 .info-row:last-child {
@@ -197,7 +198,7 @@
   color: var(--color-primary);
 }
 
-/* 操作按钮区 */
+/* 操作按钮区 — 天蓝风格 */
 .action-section {
   margin-bottom: var(--space-lg);
 }
@@ -217,25 +218,33 @@
   text-align: center;
   border: none;
   padding: 0;
+  transition: transform 150ms ease;
 }
 
 .btn-action::after {
   border: none;
 }
 
+.btn-action:active {
+  transform: scale(0.97);
+}
+
 .btn-edit {
-  background-color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
   color: #FFFFFF;
+  box-shadow: 0 3px 10px rgba(93, 168, 208, 0.25);
 }
 
 .btn-used {
-  background-color: #F3F4F6;
+  background-color: #F0F3F5;
   color: var(--color-text-secondary);
+  border: 1px solid rgba(93, 168, 208, 0.08);
 }
 
 .btn-discard {
-  background-color: #F3F4F6;
+  background-color: #F0F3F5;
   color: var(--color-text-secondary);
+  border: 1px solid rgba(93, 168, 208, 0.08);
 }
 
 .action-row + .action-row {
@@ -260,7 +269,8 @@
   text-align: center;
   padding: var(--space-md);
   border-radius: var(--radius-button);
-  background-color: #F3F4F6;
+  background-color: #F0F3F5;
+  border: 1px solid rgba(93, 168, 208, 0.08);
 }
 
 .done-text {
@@ -272,7 +282,7 @@
 /* 删除按钮 */
 .delete-section {
   padding-top: var(--space-lg);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(93, 168, 208, 0.08);
 }
 
 .btn-delete {
