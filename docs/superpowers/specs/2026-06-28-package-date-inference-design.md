@@ -222,3 +222,8 @@ if (data.packageDate) {
 - MiMo 返回 `packageDate` 的 JSON 响应可被正确解析和推断
 - 前端 `add.js` 在 `productionDate: null` 时正确兜底为今天
 - 手动录入模式不受影响
+
+## 设计约束
+
+1. `packageDate` 是**瞬态识别字段**，仅用于推断过程，**不持久化**到产品数据库记录中
+2. MiMo 返回无效或空 `packageDate` 时，前端必须兜底为当天日期，保证表单始终可用
